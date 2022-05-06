@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Stylesheets/HomePage.uss?fileID=7433441132597879392&amp;guid=3acbfeec943fa6443b1ae2d5c7f7e0fd&amp;type=3#HomePage" />
+    <ui:VisualElement name="HomePage">
+        <ui:VisualElement name="Header" class="PageHeader" style="height: 84px;">
+            <ui:VisualElement name="HeaderLogo" class="HeaderLogo" />
+        </ui:VisualElement>
+        <ui:ScrollView style="height: 100%; overflow: hidden;">
+            <ui:VisualElement name="Content" style="width: 100%; height: 100%; padding-left: 50px; padding-right: 50px; padding-top: 0; padding-bottom: 0;">
+                <ui:VisualElement class="ScrollElement" />
+                <ui:VisualElement class="ScrollElement" />
+                <ui:VisualElement class="ScrollElement" />
+                <ui:VisualElement class="ScrollElement" />
+                <ui:VisualElement class="ScrollElement" />
+            </ui:VisualElement>
+        </ui:ScrollView>
+    </ui:VisualElement>
+</ui:UXML>

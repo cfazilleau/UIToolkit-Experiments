@@ -1,0 +1,21 @@
+* {
+    -unity-font: resource('Fonts & Materials/AktivGrotesk-Regular');
+    -unity-font-definition: resource('Fonts & Materials/AktivGrotesk-Regular SDF');
+}
+
+:root {
+    background-color: rgba(32, 32, 32, 255);
+}
+
+#NavigationBar {
+    width: 100%;
+    height: 100px;
+}
+
+#PageContainer {
+    height: 100%;
+}
+
+.UIPage {
+    height: 100%;
+}

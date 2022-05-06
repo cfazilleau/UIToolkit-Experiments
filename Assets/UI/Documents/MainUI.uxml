@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Template name="HomePage" src="project://database/Assets/UI/Documents/Templates/HomePage.uxml?fileID=9197481963319205126&amp;guid=d062bb724be92894fac0d97c09a996f4&amp;type=3#HomePage" />
+    <ui:Template name="AppFooter" src="project://database/Assets/UI/Documents/Templates/NavigationBar.uxml?fileID=9197481963319205126&amp;guid=478f057b457961a4795dfaad0ea75a05&amp;type=3#NavigationBar" />
+    <Style src="project://database/Assets/UI/Stylesheets/UITKStyle.uss?fileID=7433441132597879392&amp;guid=7a8b0bfc9f5a307489796c51734d4cc9&amp;type=3#UITKStyle" />
+    <ui:VisualElement name="PageContainer" class="PageContainer">
+        <ui:Instance template="HomePage" name="HomePage" class="UIPage" />
+    </ui:VisualElement>
+    <ui:Instance template="AppFooter" name="NavigationBar" class="AppFooter" />
+</ui:UXML>

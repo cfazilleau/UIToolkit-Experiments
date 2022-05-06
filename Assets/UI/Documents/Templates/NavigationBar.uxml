@@ -1,0 +1,26 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Stylesheets/NavigationBar.uss?fileID=7433441132597879392&amp;guid=3436b57501f12624d97cb30efe5df529&amp;type=3#NavigationBar" />
+    <Style src="project://database/Assets/UI/Stylesheets/UITKStyle.uss?fileID=7433441132597879392&amp;guid=7a8b0bfc9f5a307489796c51734d4cc9&amp;type=3#UITKStyle" />
+    <ui:RadioButtonGroup name="NavigationBar" class="NavigationBar">
+        <ui:RadioButton name="HomeTabButton" class="NavigationTab">
+            <ui:VisualElement name="Icon" class="Icon" style="background-image: url(&apos;project://database/Assets/Sprites/Icons/Vector/home.svg?fileID=7388822144124034973&amp;guid=cd0b8a32ccaa0514b90e1ae884046af5&amp;type=3#home&apos;);" />
+            <ui:Label text="Home" name="Label" />
+        </ui:RadioButton>
+        <ui:RadioButton name="SocialTabButton" class="NavigationTab">
+            <ui:VisualElement name="Icon" class="Icon" style="background-image: url(&apos;project://database/Assets/Sprites/Icons/Vector/group.svg?fileID=7388822144124034973&amp;guid=a500919b04024324cad05dd3d63bfbf1&amp;type=3#group&apos;);" />
+            <ui:Label text="Friends" name="Label" />
+        </ui:RadioButton>
+        <ui:RadioButton name="PartyTabButton" class="NavigationTab">
+            <ui:VisualElement name="Icon" class="Icon" style="background-image: url(&apos;project://database/Assets/Sprites/Icons/Vector/chat.svg?fileID=7388822144124034973&amp;guid=39c6f9a1dfd223e41822eb5eb769d6fe&amp;type=3#chat&apos;);" />
+            <ui:Label text="Chat" name="Label" />
+        </ui:RadioButton>
+        <ui:RadioButton name="ShopTabButton" class="NavigationTab">
+            <ui:VisualElement name="Icon" class="Icon" style="background-image: url(&apos;project://database/Assets/Sprites/Icons/Vector/videogame_asset.svg?fileID=7388822144124034973&amp;guid=5a344095737c0dc429d6235f7d746171&amp;type=3#videogame_asset&apos;);" />
+            <ui:Label text="Games" name="Label" />
+        </ui:RadioButton>
+        <ui:RadioButton name="AccountTabButton" class="NavigationTab">
+            <ui:VisualElement name="Icon" class="Icon" style="background-image: url(&apos;project://database/Assets/Sprites/Icons/Vector/person.svg?fileID=7388822144124034973&amp;guid=2e1d1262d6437b645af4c9c42b28c937&amp;type=3#person&apos;);" />
+            <ui:Label text="Account" name="Label" />
+        </ui:RadioButton>
+    </ui:RadioButtonGroup>
+</ui:UXML>
