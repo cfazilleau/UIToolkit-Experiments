@@ -8,7 +8,7 @@
 }
 
 .HeaderLogo {
-    background-image: url('project://database/Assets/Sprites/Title.png?fileID=2800000&guid=02c78b6e39d41e64580f56c8f6dab6d6&type=3#Title');
+    background-image: url('project://database/Assets/Sprites/ApplicationLogo.png?fileID=2800000&guid=02c78b6e39d41e64580f56c8f6dab6d6&type=3#Title');
     height: 100%;
     -unity-background-scale-mode: scale-to-fit;
 }
