@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-2345653666861260734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d58e1182c43f074db638adcdad4e883, type: 3}
+  m_Name: ShapeStep
+  m_EditorClassIdentifier: 
+  guid: 476302ce90d914c4195f22380c400f16
+  position: {x: 102, y: -9}
+  inputsMinMax: {x: 1, y: 1}
+  outputsMinMax: {x: 1, y: 1}
+  nextSteps:
+  - {fileID: -247157357654327476}
+  previousSteps:
+  - {fileID: 8502735824509534493}
+--- !u!114 &-247157357654327476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d004a7e36d9f81a498e48340294b5814, type: 3}
+  m_Name: MixStep
+  m_EditorClassIdentifier: 
+  guid: 3b4d247ba0f086f48970f0b86e2c2029
+  position: {x: 242, y: 120}
+  inputsMinMax: {x: 2, y: 2147483647}
+  outputsMinMax: {x: 1, y: 1}
+  nextSteps:
+  - {fileID: 0}
+  previousSteps:
+  - {fileID: 1159239688938241741}
+  - {fileID: -2345653666861260734}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e34e3195a2a55e74ab93fb784c03505b, type: 3}
+  m_Name: New Recipe
+  m_EditorClassIdentifier: 
+  steps:
+  - {fileID: -247157357654327476}
+  - {fileID: 8502735824509534493}
+  - {fileID: 1159239688938241741}
+  - {fileID: -2345653666861260734}
+--- !u!114 &1159239688938241741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7635639ad2bd9254ab73db7f6283131d, type: 3}
+  m_Name: RestStep
+  m_EditorClassIdentifier: 
+  guid: e946bb1bb8b29664a92a84c20ed183ed
+  position: {x: 67, y: 242.32}
+  inputsMinMax: {x: 1, y: 1}
+  outputsMinMax: {x: 1, y: 1}
+  nextSteps:
+  - {fileID: -247157357654327476}
+  previousSteps:
+  - {fileID: 8502735824509534493}
+--- !u!114 &8502735824509534493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b510ed3102c4fc4394ef0afb3556784, type: 3}
+  m_Name: CookStep
+  m_EditorClassIdentifier: 
+  guid: 5f845fd37b3f0f4439ed281a11693cc1
+  position: {x: -96.000015, y: 120}
+  inputsMinMax: {x: 1, y: 1}
+  outputsMinMax: {x: 1, y: 1}
+  nextSteps:
+  - {fileID: -2345653666861260734}
+  previousSteps:
+  - {fileID: 0}
