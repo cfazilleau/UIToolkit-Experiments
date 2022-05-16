@@ -1,29 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine.UIElements;
 
 public class InspectorView : VisualElement
 {
-	public new class UxmlFactory : UxmlFactory<InspectorView, InspectorView.UxmlTraits> { };
+	public new class UxmlFactory : UxmlFactory<InspectorView, UxmlTraits> { };
 
-	private Editor editor;
-
-	public InspectorView()
-	{
-	}
+	private Editor _editor;
 
 	internal void UpdateSelection(StepNodeView stepNodeView)
 	{
 		Clear();
-		UnityEngine.Object.DestroyImmediate(editor);
+		UnityEngine.Object.DestroyImmediate(_editor);
 
-		if (stepNodeView != null)
-		{
-			editor = Editor.CreateEditor(stepNodeView.Step);
-			IMGUIContainer container = new IMGUIContainer(() => { editor.OnInspectorGUI(); });
-			Add(container);
-		}
+		if (stepNodeView == null)
+			return;
+
+		_editor = Editor.CreateEditor(stepNodeView.Step);
+		IMGUIContainer container = new(() => { _editor.OnInspectorGUI(); });
+		Add(container);
 	}
 
 }

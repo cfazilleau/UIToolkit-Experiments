@@ -5,15 +5,14 @@ using System;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class RecipeEditorView : GraphView
 {
 	public Action<StepNodeView> OnStepViewSelected;
 
-	public new class UxmlFactory : UxmlFactory<RecipeEditorView, GraphView.UxmlTraits> { };
+	public new class UxmlFactory : UxmlFactory<RecipeEditorView, UxmlTraits> { };
 
-	Recipe recipe = null;
+	private Recipe _recipe;
 
 	public RecipeEditorView()
 	{
@@ -30,7 +29,7 @@ public class RecipeEditorView : GraphView
 
 	public void PopulateView(Recipe recipe)
 	{
-		this.recipe = recipe;
+		this._recipe = recipe;
 
 		graphViewChanged -= OnGraphViewChanged;
 		DeleteElements(graphElements);
@@ -44,22 +43,22 @@ public class RecipeEditorView : GraphView
 		{
 			StepNodeView nodeView = GetNodeView(node);
 
-			foreach (Recipe.Step nextStep in node.nextSteps)
+			foreach (Recipe.Step nextStep in node.outputs)
 			{
 				if (nextStep == null)
 					continue;
 
-				int outputIndex = Array.IndexOf(node.nextSteps, nextStep);
-				int inputIndex = Array.IndexOf(nextStep.previousSteps, node);
+				int outputIndex = Array.IndexOf(node.outputs, nextStep);
+				int inputIndex = Array.IndexOf(nextStep.inputs, node);
 
 				// Connect ports at the same indexes as Steps
-				Edge edge = nodeView.outputs[outputIndex].ConnectTo(GetNodeView(nextStep).inputs[inputIndex]);
+				Edge edge = nodeView.Outputs[outputIndex].ConnectTo(GetNodeView(nextStep).Inputs[inputIndex]);
 				AddElement(edge);
 			}
 		});
 	}
 
-	public StepNodeView GetNodeView(Recipe.Step step)
+	private StepNodeView GetNodeView(Recipe.Step step)
 	{
 		return GetNodeByGuid(step.guid) as StepNodeView;
 	}
@@ -75,7 +74,7 @@ public class RecipeEditorView : GraphView
 			// Delete Step (will nullify references)
 			if (elem is StepNodeView stepView)
 			{
-				recipe.DeleteStep(stepView.Step);
+				_recipe.DeleteStep(stepView.Step);
 			}
 
 			// Delete Edge
@@ -84,11 +83,11 @@ public class RecipeEditorView : GraphView
 				if (edge.input.node is StepNodeView endNode &&
 				    edge.output.node is StepNodeView startNode)
 				{
-					int outputIndex = startNode.outputs.IndexOf(edge.output);
-					startNode.Step.nextSteps[outputIndex] = null;
+					int outputIndex = startNode.Outputs.IndexOf(edge.output);
+					startNode.Step.outputs[outputIndex] = null;
 
-					int inputIndex = endNode.inputs.IndexOf(edge.input);
-					endNode.Step.previousSteps[inputIndex] = null;
+					int inputIndex = endNode.Inputs.IndexOf(edge.input);
+					endNode.Step.inputs[inputIndex] = null;
 				}
 			}
 		});
@@ -98,11 +97,11 @@ public class RecipeEditorView : GraphView
 			if (edge.input.node is StepNodeView endNode &&
 			    edge.output.node is StepNodeView startNode)
 			{
-				int outputIndex = startNode.outputs.IndexOf(edge.output);
-				startNode.Step.nextSteps[outputIndex] = endNode.Step;
+				int outputIndex = startNode.Outputs.IndexOf(edge.output);
+				startNode.Step.outputs[outputIndex] = endNode.Step;
 
-				int inputIndex = endNode.inputs.IndexOf(edge.input);
-				endNode.Step.previousSteps[inputIndex] = startNode.Step;
+				int inputIndex = endNode.Inputs.IndexOf(edge.input);
+				endNode.Step.inputs[inputIndex] = startNode.Step;
 			}
 		});
 
@@ -116,27 +115,27 @@ public class RecipeEditorView : GraphView
 		TypeCache.TypeCollection types = TypeCache.GetTypesDerivedFrom<Recipe.Step>();
 		foreach (Type type in types)
 		{
-			if (!type.IsAbstract)
-			{
-				Recipe.StepAttribute recipeStepInfo = Attribute.GetCustomAttribute(type.GetTypeInfo(), typeof(Recipe.StepAttribute)) as Recipe.StepAttribute;
+			if (type.IsAbstract)
+				continue;
 
-				if (recipeStepInfo == null)
-					continue;
+			Recipe.StepAttribute recipeStepInfo = Attribute.GetCustomAttribute(type.GetTypeInfo(), typeof(Recipe.StepAttribute)) as Recipe.StepAttribute;
 
-				evt.menu.AppendAction($"Step/{recipeStepInfo.stepName}", a => CreateStep(type));
-			}
+			if (recipeStepInfo == null)
+				continue;
+
+			evt.menu.AppendAction($"Step/{recipeStepInfo.StepName}", _ => CreateStep(type));
 		}
 	}
 
 	private void CreateStep(Type type)
 	{
-		Recipe.Step step = recipe.CreateStep(type);
+		Recipe.Step step = _recipe.CreateStep(type);
 		CreateStepNode(step);
 	}
 
 	private void CreateStepNode(Recipe.Step step)
 	{
-		StepNodeView stepView = new StepNodeView(step);
+		StepNodeView stepView = new(step);
 		stepView.OnStepViewSelected += OnStepViewSelected;
 		AddElement(stepView);
 	}

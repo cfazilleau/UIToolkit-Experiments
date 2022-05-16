@@ -1,9 +1,12 @@
-using System;
-using System.Collections.Generic;
-
-using UnityEngine;
-
-[Recipe.Step("Cook")]
-public class CookStep : Recipe.Step
+namespace Recipes.Scriptable.Steps
 {
+	[Recipe.Step("Cook", "Cook")]
+	public class CookStep : Recipe.Step
+	{
+		public bool Cook(in Recipe.Step input, out Recipe.Step result)
+		{
+			result = input;
+			return true;
+		}
+	}
 }

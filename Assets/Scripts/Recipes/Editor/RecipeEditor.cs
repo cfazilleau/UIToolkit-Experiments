@@ -1,13 +1,12 @@
-using System;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-
 public class RecipeEditor : EditorWindow
 {
-	RecipeEditorView recipeEditorView;
-	InspectorView inspectorView;
+	private RecipeEditorView _recipeEditorView;
+	private InspectorView _inspectorView;
 
 	[MenuItem("Window/RecipeEditor")]
 	public static void OpenWindow()
@@ -30,9 +29,9 @@ public class RecipeEditor : EditorWindow
 		var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Recipes/Editor/RecipeEditor.uss");
 		root.styleSheets.Add(styleSheet);
 
-		recipeEditorView = root.Query<RecipeEditorView>();
-		inspectorView = root.Query<InspectorView>();
-		recipeEditorView.OnStepViewSelected = OnNodeSelectionChanged;
+		_recipeEditorView = root.Query<RecipeEditorView>();
+		_inspectorView = root.Query<InspectorView>();
+		_recipeEditorView.OnStepViewSelected = OnNodeSelectionChanged;
 
 		OnSelectionChange();
 	}
@@ -41,12 +40,23 @@ public class RecipeEditor : EditorWindow
 	{
 		if (Selection.activeObject is Recipe recipe)
 		{
-			recipeEditorView.PopulateView(recipe);
+			_recipeEditorView.PopulateView(recipe);
 		}
+	}
+
+	[OnOpenAsset]
+	public static bool OnOpenAsset(int instanceId, int line)
+	{
+		if (Selection.activeObject is Recipe)
+		{
+			OpenWindow();
+			return true;
+		}
+		return false;
 	}
 
 	private void OnNodeSelectionChanged(StepNodeView stepNodeView)
 	{
-		inspectorView.UpdateSelection(stepNodeView);
+		_inspectorView.UpdateSelection(stepNodeView);
 	}
 }

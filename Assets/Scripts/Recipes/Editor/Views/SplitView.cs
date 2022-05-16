@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UIElements;
 
-public class SplitView : TwoPaneSplitView
+namespace Recipes.Editor.Views
 {
-	public new class UxmlFactory : UxmlFactory<SplitView, SplitView.UxmlTraits> { };
-	public SplitView()
+	public class SplitView : TwoPaneSplitView
 	{
+		public new class UxmlFactory : UxmlFactory<SplitView, UxmlTraits> { }
 	}
 }
