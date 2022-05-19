@@ -1,11 +1,13 @@
+using System.Collections.Generic;
+
 namespace Recipes.Scriptable.Steps
 {
-	[Recipe.Step("Mix", "Mix", inputsMin: 2, inputsMax: int.MaxValue)]
-	public class MixStep : Recipe.Step
+	[Step("Mix")]
+	public class MixStep : Step
 	{
-		public bool Mix(in Recipe.Step ingredient1, in Recipe.Step ingredient2, out Recipe.Step result)
+		public bool Mix(in List<Step> ingredients, out Step result)
 		{
-			result = ingredient1;
+			result = ingredients[0];
 			return true;
 		}
 	}

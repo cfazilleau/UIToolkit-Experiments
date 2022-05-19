@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6f89daefba9439e9a65c95f708ec49d, type: 3}
-  m_Name: Egg
+  m_Name: Chocolate Chips
   m_EditorClassIdentifier: 
-  ingredientName: Egg
+  ingredientName: 
   image: {fileID: 0}

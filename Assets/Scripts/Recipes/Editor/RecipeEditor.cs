@@ -1,62 +1,67 @@
+using System;
+using Recipes.Editor.Views;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class RecipeEditor : EditorWindow
+namespace Recipes.Editor
 {
-	private RecipeEditorView _recipeEditorView;
-	private InspectorView _inspectorView;
-
-	[MenuItem("Window/RecipeEditor")]
-	public static void OpenWindow()
+	public class RecipeEditor : EditorWindow
 	{
-		RecipeEditor wnd = GetWindow<RecipeEditor>();
-		wnd.titleContent = new GUIContent("Recipe Editor", EditorGUIUtility.IconContent("TreeEditor.Distribution On").image);
-	}
+		private RecipeEditorView _recipeEditorView;
+		private InspectorView _inspectorView;
 
-	public void CreateGUI()
-	{
-		// Each editor window contains a root VisualElement object
-		VisualElement root = rootVisualElement;
-
-		// Import UXML
-		var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Scripts/Recipes/Editor/RecipeEditor.uxml");
-		visualTree.CloneTree(root);
-
-		// A stylesheet can be added to a VisualElement.
-		// The style will be applied to the VisualElement and all of its children.
-		var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Recipes/Editor/RecipeEditor.uss");
-		root.styleSheets.Add(styleSheet);
-
-		_recipeEditorView = root.Query<RecipeEditorView>();
-		_inspectorView = root.Query<InspectorView>();
-		_recipeEditorView.OnStepViewSelected = OnNodeSelectionChanged;
-
-		OnSelectionChange();
-	}
-
-	private void OnSelectionChange()
-	{
-		if (Selection.activeObject is Recipe recipe)
+		[MenuItem("Window/RecipeEditor")]
+		public static void OpenWindow()
 		{
-			_recipeEditorView.PopulateView(recipe);
+			RecipeEditor wnd = GetWindow<RecipeEditor>();
+			wnd.titleContent = new GUIContent("Recipe Editor", EditorGUIUtility.IconContent("TreeEditor.Distribution On").image);
 		}
-	}
 
-	[OnOpenAsset]
-	public static bool OnOpenAsset(int instanceId, int line)
-	{
-		if (Selection.activeObject is Recipe)
+		public void CreateGUI()
 		{
-			OpenWindow();
-			return true;
-		}
-		return false;
-	}
+			// Each editor window contains a root VisualElement object
+			VisualElement root = rootVisualElement;
 
-	private void OnNodeSelectionChanged(StepNodeView stepNodeView)
-	{
-		_inspectorView.UpdateSelection(stepNodeView);
+			// Import UXML
+			VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Scripts/Recipes/Editor/RecipeEditor.uxml");
+			visualTree.CloneTree(root);
+
+			// A stylesheet can be added to a VisualElement.
+			// The style will be applied to the VisualElement and all of its children.
+			StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Recipes/Editor/RecipeEditor.uss");
+			root.styleSheets.Add(styleSheet);
+
+			_recipeEditorView = root.Query<RecipeEditorView>();
+			_inspectorView = root.Query<InspectorView>();
+			_recipeEditorView.OnStepViewSelected = OnNodeSelectionChanged;
+
+			OnSelectionChange();
+		}
+
+		private void OnSelectionChange()
+		{
+			if (Selection.activeObject is Recipe recipe)
+			{
+				_recipeEditorView.PopulateView(recipe);
+			}
+		}
+
+		[OnOpenAsset]
+		public static bool OnOpenAsset(int instanceId, int line)
+		{
+			if (Selection.activeObject is Recipe)
+			{
+				OpenWindow();
+				return true;
+			}
+			return false;
+		}
+
+		private void OnNodeSelectionChanged(StepNodeView stepNodeView)
+		{
+			_inspectorView.UpdateSelection(stepNodeView);
+		}
 	}
 }

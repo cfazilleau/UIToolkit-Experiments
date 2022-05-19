@@ -1,23 +1,25 @@
-using UnityEditor;
 using UnityEngine.UIElements;
 
-public class InspectorView : VisualElement
+namespace Recipes.Editor.Views
 {
-	public new class UxmlFactory : UxmlFactory<InspectorView, UxmlTraits> { };
-
-	private Editor _editor;
-
-	internal void UpdateSelection(StepNodeView stepNodeView)
+	public class InspectorView : VisualElement
 	{
-		Clear();
-		UnityEngine.Object.DestroyImmediate(_editor);
+		public new class UxmlFactory : UxmlFactory<InspectorView, UxmlTraits> { };
 
-		if (stepNodeView == null)
-			return;
+		private UnityEditor.Editor _editor;
 
-		_editor = Editor.CreateEditor(stepNodeView.Step);
-		IMGUIContainer container = new(() => { _editor.OnInspectorGUI(); });
-		Add(container);
+		internal void UpdateSelection(StepNodeView stepNodeView)
+		{
+			Clear();
+			UnityEngine.Object.DestroyImmediate(_editor);
+
+			if (stepNodeView == null)
+				return;
+
+			_editor = UnityEditor.Editor.CreateEditor(stepNodeView.Step);
+			IMGUIContainer container = new(() => { _editor.OnInspectorGUI(); });
+			Add(container);
+		}
+
 	}
-
 }

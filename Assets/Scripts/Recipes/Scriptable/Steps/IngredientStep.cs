@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace Recipes.Scriptable.Steps
 {
-	[Recipe.Step("Ingredient", "Ingredient", 0, 0)]
-	public class IngredientStep : Recipe.Step
+	[Step("Ingredient")]
+	public class IngredientStep : Step
 	{
 		[SerializeField]
 		private Ingredient ingredient = null;
@@ -11,9 +11,9 @@ namespace Recipes.Scriptable.Steps
 		[SerializeField]
 		private int quantity = 50;
 
-		public bool Ingredient(out bool truc)
+		public bool Ingredient(out IngredientStep ingredient)
 		{
-			truc = false;
+			ingredient = this;
 			return false;
 		}
 	}

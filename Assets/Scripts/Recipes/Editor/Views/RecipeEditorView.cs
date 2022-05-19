@@ -1,142 +1,146 @@
-using UnityEditor;
-using UnityEngine.UIElements;
-using UnityEditor.Experimental.GraphView;
 using System;
-using System.Reflection;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Recipes.Scriptable.Steps;
+using UnityEditor;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine.UIElements;
 
-public class RecipeEditorView : GraphView
+namespace Recipes.Editor.Views
 {
-	public Action<StepNodeView> OnStepViewSelected;
-
-	public new class UxmlFactory : UxmlFactory<RecipeEditorView, UxmlTraits> { };
-
-	private Recipe _recipe;
-
-	public RecipeEditorView()
+	public class RecipeEditorView : GraphView
 	{
-		Insert(0, new GridBackground());
+		public Action<StepNodeView> OnStepViewSelected;
 
-		this.AddManipulator(new ContentZoomer());
-		this.AddManipulator(new ContentDragger());
-		this.AddManipulator(new SelectionDragger());
-		this.AddManipulator(new RectangleSelector());
+		public new class UxmlFactory : UxmlFactory<RecipeEditorView, UxmlTraits> { };
 
-		var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Recipes/Editor/RecipeEditor.uss");
-		styleSheets.Add(styleSheet);
-	}
+		private Recipe _recipe;
 
-	public void PopulateView(Recipe recipe)
-	{
-		this._recipe = recipe;
-
-		graphViewChanged -= OnGraphViewChanged;
-		DeleteElements(graphElements);
-		graphViewChanged += OnGraphViewChanged;
-
-		// Create Nodes
-		recipe.steps.ForEach(CreateStepNode);
-
-		// Create Edges
-		recipe.steps.ForEach(node =>
+		public RecipeEditorView()
 		{
-			StepNodeView nodeView = GetNodeView(node);
+			Insert(0, new GridBackground());
 
-			foreach (Recipe.Step nextStep in node.outputs)
+			this.AddManipulator(new ContentZoomer());
+			this.AddManipulator(new ContentDragger());
+			this.AddManipulator(new SelectionDragger());
+			this.AddManipulator(new RectangleSelector());
+
+			var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Recipes/Editor/RecipeEditor.uss");
+			styleSheets.Add(styleSheet);
+		}
+
+		public void PopulateView(Recipe recipe)
+		{
+			_recipe = recipe;
+
+			graphViewChanged -= OnGraphViewChanged;
+			DeleteElements(graphElements);
+			graphViewChanged += OnGraphViewChanged;
+
+			// Create Nodes
+			recipe.steps.ForEach(CreateStepNode);
+
+			// Create Edges
+			recipe.steps.ForEach(node =>
 			{
-				if (nextStep == null)
-					continue;
+				StepNodeView nodeView = GetNodeView(node);
 
-				int outputIndex = Array.IndexOf(node.outputs, nextStep);
-				int inputIndex = Array.IndexOf(nextStep.inputs, node);
+				foreach (Step nextStep in node.outputs)
+				{
+					if (nextStep == null)
+						continue;
 
-				// Connect ports at the same indexes as Steps
-				Edge edge = nodeView.Outputs[outputIndex].ConnectTo(GetNodeView(nextStep).Inputs[inputIndex]);
-				AddElement(edge);
-			}
-		});
-	}
+					int outputIndex = Array.IndexOf(node.outputs, nextStep);
+					int inputIndex = Array.IndexOf(nextStep.inputs, node);
 
-	private StepNodeView GetNodeView(Recipe.Step step)
-	{
-		return GetNodeByGuid(step.guid) as StepNodeView;
-	}
+					// Connect ports at the same indexes as Steps
+					Edge edge = nodeView.Outputs[outputIndex].ConnectTo(GetNodeView(nextStep).Inputs[inputIndex]);
+					AddElement(edge);
+				}
+			});
+		}
 
-	public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
-	{
-		return ports.ToList().Where(endPort => endPort.direction != startPort.direction && endPort.node != startPort.node).ToList();
-	}
+		private StepNodeView GetNodeView(Step step)
+		{
+			return GetNodeByGuid(step.guid) as StepNodeView;
+		}
 
-	private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
-	{
-		graphViewChange.elementsToRemove?.ForEach(elem => {
-			// Delete Step (will nullify references)
-			if (elem is StepNodeView stepView)
-			{
-				_recipe.DeleteStep(stepView.Step);
-			}
+		public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+		{
+			return ports.ToList().Where(endPort => endPort.direction != startPort.direction && endPort.node != startPort.node).ToList();
+		}
 
-			// Delete Edge
-			if (elem is Edge edge)
-			{
+		private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
+		{
+			graphViewChange.elementsToRemove?.ForEach(elem => {
+				// Delete Step (will nullify references)
+				if (elem is StepNodeView stepView)
+				{
+					_recipe.DeleteStep(stepView.Step);
+				}
+
+				// Delete Edge
+				if (elem is Edge edge)
+				{
+					if (edge.input.node is StepNodeView endNode &&
+					    edge.output.node is StepNodeView startNode)
+					{
+						int outputIndex = startNode.Outputs.IndexOf(edge.output);
+						startNode.Step.outputs[outputIndex] = null;
+
+						int inputIndex = endNode.Inputs.IndexOf(edge.input);
+						endNode.Step.inputs[inputIndex] = null;
+					}
+				}
+			});
+
+			graphViewChange.edgesToCreate?.ForEach(edge => {
+				// Create Edge connections
 				if (edge.input.node is StepNodeView endNode &&
 				    edge.output.node is StepNodeView startNode)
 				{
 					int outputIndex = startNode.Outputs.IndexOf(edge.output);
-					startNode.Step.outputs[outputIndex] = null;
+					startNode.Step.outputs[outputIndex] = endNode.Step;
 
 					int inputIndex = endNode.Inputs.IndexOf(edge.input);
-					endNode.Step.inputs[inputIndex] = null;
+					endNode.Step.inputs[inputIndex] = startNode.Step;
 				}
-			}
-		});
+			});
 
-		graphViewChange.edgesToCreate?.ForEach(edge => {
-			// Create Edge connections
-			if (edge.input.node is StepNodeView endNode &&
-			    edge.output.node is StepNodeView startNode)
-			{
-				int outputIndex = startNode.Outputs.IndexOf(edge.output);
-				startNode.Step.outputs[outputIndex] = endNode.Step;
-
-				int inputIndex = endNode.Inputs.IndexOf(edge.input);
-				endNode.Step.inputs[inputIndex] = startNode.Step;
-			}
-		});
-
-		return graphViewChange;
-	}
-
-	public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
-	{
-		//base.BuildContextualMenu(evt);
-
-		TypeCache.TypeCollection types = TypeCache.GetTypesDerivedFrom<Recipe.Step>();
-		foreach (Type type in types)
-		{
-			if (type.IsAbstract)
-				continue;
-
-			Recipe.StepAttribute recipeStepInfo = Attribute.GetCustomAttribute(type.GetTypeInfo(), typeof(Recipe.StepAttribute)) as Recipe.StepAttribute;
-
-			if (recipeStepInfo == null)
-				continue;
-
-			evt.menu.AppendAction($"Step/{recipeStepInfo.StepName}", _ => CreateStep(type));
+			return graphViewChange;
 		}
-	}
 
-	private void CreateStep(Type type)
-	{
-		Recipe.Step step = _recipe.CreateStep(type);
-		CreateStepNode(step);
-	}
+		public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+		{
+			//base.BuildContextualMenu(evt);
 
-	private void CreateStepNode(Recipe.Step step)
-	{
-		StepNodeView stepView = new(step);
-		stepView.OnStepViewSelected += OnStepViewSelected;
-		AddElement(stepView);
+			TypeCache.TypeCollection types = TypeCache.GetTypesDerivedFrom<Step>();
+			foreach (Type type in types)
+			{
+				if (type.IsAbstract || type == typeof(ResultStep))
+					continue;
+
+				StepAttribute recipeStepInfo = Attribute.GetCustomAttribute(type.GetTypeInfo(), typeof(StepAttribute)) as StepAttribute;
+
+				if (recipeStepInfo == null)
+					continue;
+
+				evt.menu.AppendAction($"Step/{recipeStepInfo.StepName}", _ => CreateStep(type));
+			}
+		}
+
+		private void CreateStep(Type type)
+		{
+			Step step = _recipe.CreateStep(type);
+			CreateStepNode(step);
+		}
+
+		private void CreateStepNode(Step step)
+		{
+			StepNodeView stepView = new(step);
+			stepView.OnStepViewSelected += OnStepViewSelected;
+			AddElement(stepView);
+		}
 	}
 }

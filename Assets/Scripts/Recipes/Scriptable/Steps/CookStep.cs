@@ -1,9 +1,9 @@
 namespace Recipes.Scriptable.Steps
 {
-	[Recipe.Step("Cook", "Cook")]
-	public class CookStep : Recipe.Step
+	[Step("Cook")]
+	public class CookStep : Step
 	{
-		public bool Cook(in Recipe.Step input, out Recipe.Step result)
+		public bool Cook(in Step input, out Step result)
 		{
 			result = input;
 			return true;

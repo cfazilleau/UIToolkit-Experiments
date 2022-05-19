@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: CookStep
   m_EditorClassIdentifier: 
   guid: 69aa34240a158344a80aeae7038f9ec2
-  position: {x: 246, y: 80}
-  inputsMinMax: {x: 1, y: 1}
-  outputsMinMax: {x: 1, y: 1}
+  position: {x: 199.81248, y: -93.000015}
   outputs:
   - {fileID: -1620685112276260841}
   inputs:
@@ -33,9 +31,7 @@ MonoBehaviour:
   m_Name: ShapeStep
   m_EditorClassIdentifier: 
   guid: 48e523a34dbfe7540b71399c16a350ba
-  position: {x: 99, y: 80}
-  inputsMinMax: {x: 1, y: 1}
-  outputsMinMax: {x: 1, y: 1}
+  position: {x: -57.195347, y: -93.000015}
   outputs:
   - {fileID: -5868552370620860459}
   inputs:
@@ -53,9 +49,7 @@ MonoBehaviour:
   m_Name: IngredientStep
   m_EditorClassIdentifier: 
   guid: f7e63de357dbe0a4c99d7aaf166fb1af
-  position: {x: -83, y: 192}
-  inputsMinMax: {x: 0, y: 0}
-  outputsMinMax: {x: 1, y: 1}
+  position: {x: -125.00008, y: 195.99997}
   outputs:
   - {fileID: 7646691478186477430}
   inputs: []
@@ -74,9 +68,7 @@ MonoBehaviour:
   m_Name: MixStep
   m_EditorClassIdentifier: 
   guid: 6aa388e252573d54fb70c2bac9ef7c7c
-  position: {x: -325.92664, y: 21}
-  inputsMinMax: {x: 2, y: 2147483647}
-  outputsMinMax: {x: 1, y: 1}
+  position: {x: -598.614, y: -204.99997}
   outputs:
   - {fileID: 9044928631105005221}
   inputs:
@@ -95,11 +87,9 @@ MonoBehaviour:
   m_Name: MixStep
   m_EditorClassIdentifier: 
   guid: df538867b9098e445a84dc911337c271
-  position: {x: 412, y: 112}
-  inputsMinMax: {x: 2, y: 2147483647}
-  outputsMinMax: {x: 1, y: 1}
+  position: {x: 522.506, y: 44.999947}
   outputs:
-  - {fileID: 0}
+  - {fileID: 1589335795882205745}
   inputs:
   - {fileID: -5868552370620860459}
   - {fileID: 7646691478186477430}
@@ -126,6 +116,24 @@ MonoBehaviour:
   - {fileID: 4146707381999840747}
   - {fileID: -1620685112276260841}
   - {fileID: -3046397967359557289}
+  - {fileID: 1589335795882205745}
+--- !u!114 &1589335795882205745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50b8a32cba9945dcb8f173599b5415ff, type: 3}
+  m_Name: ResultStep
+  m_EditorClassIdentifier: 
+  guid: 941255977a5d44445a12e67e35e46f8c
+  position: {x: 781.506, y: 44.999947}
+  outputs: []
+  inputs:
+  - {fileID: -1620685112276260841}
 --- !u!114 &4146707381999840747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,9 +147,7 @@ MonoBehaviour:
   m_Name: IngredientStep
   m_EditorClassIdentifier: 
   guid: 40644b8b7c77c874b8a0c35a7db9b080
-  position: {x: -381.00003, y: 160.99997}
-  inputsMinMax: {x: 0, y: 0}
-  outputsMinMax: {x: 1, y: 1}
+  position: {x: -598.614, y: 57}
   outputs:
   - {fileID: 9044928631105005221}
   inputs: []
@@ -160,9 +166,7 @@ MonoBehaviour:
   m_Name: IngredientStep
   m_EditorClassIdentifier: 
   guid: 6d1be4e2c9c205343bcd8f5f454a0c38
-  position: {x: -633, y: -45.99998}
-  inputsMinMax: {x: 0, y: 0}
-  outputsMinMax: {x: 1, y: 1}
+  position: {x: -915.61395, y: -337}
   outputs:
   - {fileID: -2060128021560195462}
   inputs: []
@@ -181,9 +185,7 @@ MonoBehaviour:
   m_Name: IngredientStep
   m_EditorClassIdentifier: 
   guid: c398759be99942441a28a6b7de6137bf
-  position: {x: -632.92664, y: 80}
-  inputsMinMax: {x: 0, y: 0}
-  outputsMinMax: {x: 1, y: 1}
+  position: {x: -915.61395, y: -69.99995}
   outputs:
   - {fileID: -2060128021560195462}
   inputs: []
@@ -202,9 +204,7 @@ MonoBehaviour:
   m_Name: RestStep
   m_EditorClassIdentifier: 
   guid: 2fb2092dd2005dc49b22a6753ffe7bf8
-  position: {x: 157, y: 192}
-  inputsMinMax: {x: 1, y: 1}
-  outputsMinMax: {x: 1, y: 1}
+  position: {x: 199.99994, y: 197.00003}
   outputs:
   - {fileID: -1620685112276260841}
   inputs:
@@ -223,9 +223,7 @@ MonoBehaviour:
   m_Name: MixStep
   m_EditorClassIdentifier: 
   guid: 9f19cff54f5d0f144ae1b526ead515fe
-  position: {x: -82.579216, y: 80.000015}
-  inputsMinMax: {x: 2, y: 2147483647}
-  outputsMinMax: {x: 1, y: 1}
+  position: {x: -322.61395, y: -92.999954}
   outputs:
   - {fileID: -5392538510918765663}
   inputs:
