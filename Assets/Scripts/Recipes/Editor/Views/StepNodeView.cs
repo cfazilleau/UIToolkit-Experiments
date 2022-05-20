@@ -2,151 +2,118 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Recipes.Scriptable;
 using Recipes.Scriptable.Steps;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Recipes.Editor.Views
+namespace Recipes.Editor
 {
 	public sealed class StepNodeView : Node
 	{
 		private readonly Step _step;
-		private readonly StepAttribute _stepInfo;
-		public readonly List<Port> Inputs = new();
-		public readonly List<Port> Outputs = new();
+		public readonly List<Port> InputPorts = new();
+		public readonly List<Port> OutputPorts = new();
 
-		private VisualElement _stepInspector;
+		private IMGUIContainer _stepInspector;
 		public Action<StepNodeView> OnStepViewSelected;
 
 		public Step Step => _step;
 
-		public StepNodeView(Step step)
+		public StepNodeView(Step step) : base("Assets/Scripts/Recipes/Editor/RecipeNode.uxml")
 		{
 			_step = step;
-			_stepInfo = Attribute.GetCustomAttribute(_step.GetType().GetTypeInfo(), typeof(StepAttribute)) as StepAttribute;
 
-			if (_stepInfo == null)
-			{
-				Debug.LogError($"StepAttribute not found on step {_step}, {_step}", _step);
-				return;
-			}
+			title = step.StepTitle ?? step.StepInfo.StepName ?? step.name;
+			viewDataKey = step._nodeGUID;
 
-			title = _stepInfo.StepName ?? step.name;
-			viewDataKey = step.guid;
-			capabilities |= Capabilities.Collapsible;
+			style.left = step._nodePosition.x;
+			style.top = step._nodePosition.y;
 
-			style.left = step.position.x;
-			style.top = step.position.y;
-
-			// Clear null trailing references
-			List<Step> ins = Step.inputs.ToList();
-			for (int i = ins.Count - 1; i >= 0; i--)
-			{
-				if (ins[i] == null)
-					ins.RemoveAt(i);
-				else
-					break;
-			}
-			Step.inputs = ins.ToArray();
+			Step.ClearNullReferencesIfInputList();
 
 			CreatePorts();
-			CreateParametersPanel();
+			CreateNodeDetails();
 
 			RefreshExpandedState();
 		}
 
 		private void CreatePorts()
 		{
-			if (_stepInfo.StepName == null || Step.GetType().GetMethod(_stepInfo.StepName) is not { } info)
-				return;
-
-			ParameterInfo[] parameters = info.GetParameters();
-			foreach (ParameterInfo parameterInfo in parameters)
+			// If input is a List, handle List ports
+			if (_step.InputSingleAndList)
 			{
-				Type parameterType = parameterInfo.ParameterType.GetElementType();
+				ParameterInfo parameterInfo = _step.inputInfos[0];
+				Type genericType = parameterInfo.ParameterType.GetElementType()?.GenericTypeArguments[0];
 
-				// If there is only one input parameter and it is a list, put a variable amount of ports.
-				if (parameterType != null &&
-				    parameters.Count(p => !p.IsOut) == 1 &&
-				    parameterInfo.IsOut == false &&
-				    parameterType.IsGenericType &&
-				    parameterType.GetGenericTypeDefinition() == typeof(List<>) &&
-				    parameterType.GenericTypeArguments.Length == 1)
-				{
-					Type genericType = parameterType.GenericTypeArguments[0];
+				// Only first port has a name
+				CreateAndAddPort(parameterInfo.Name, genericType, parameterInfo.IsOut);
 
-					// Add All existing ports
-					for (int i = 0; i < Step.inputs.Length; i++)
-						CreateAndAddPort(i == 0 ? parameterInfo.Name : string.Empty, genericType, parameterInfo.IsOut);
-
-					// Add one more to extend the node
+				// Add All existing ports
+				for (int i = 1; i < Step.Inputs.Length; i++)
 					CreateAndAddPort(string.Empty, genericType, parameterInfo.IsOut);
-					Array.Resize(ref Step.inputs, Step.inputs.Length + 1);
-				}
-				else
-				{
-					// Create Port and continue
-					CreateAndAddPort(parameterInfo.Name, parameterType, parameterInfo.IsOut);
-				}
 			}
+			else
+			{
+				// Create Input ports
+				foreach (ParameterInfo info in _step.inputInfos)
+					CreateAndAddPort(info);
+			}
+
+			// Create Output ports
+			foreach (ParameterInfo info in _step.outputInfos)
+				CreateAndAddPort(info);
+		}
+
+		private void CreateAndAddPort(ParameterInfo info)
+		{
+			CreateAndAddPort(info.Name, info.ParameterType.GetElementType(), info.IsOut);
 		}
 
 		private void CreateAndAddPort(string portName, Type type, bool isOut)
 		{
-			// Get out / in parameters
-			Direction dir;
-			VisualElement container;
-			List<Port> portsList;
+			// Instantiate and reference port
+			Port port = InstantiatePort(0, isOut ? Direction.Output : Direction.Input, 0, type);
+			port.portName = portName;
+
+			// Add to corresponding list and container
 			if (isOut)
 			{
-				dir = Direction.Output;
-				container = outputContainer;
-				portsList = Outputs;
+				OutputPorts.Add(port);
+				outputContainer.Add(port);
 			}
 			else
 			{
-				dir = Direction.Input;
-				container = inputContainer;
-				portsList = Inputs;
+				InputPorts.Add(port);
+				inputContainer.Add(port);
 			}
-
-			// Instantiate and reference port
-			Port port = InstantiatePort(Orientation.Horizontal, dir, Port.Capacity.Single, type);
-			port.portName = portName;
-			portsList.Add(port);
-			container.Add(port);
 		}
 
-		private void CreateParametersPanel()
+		private void CreateNodeDetails()
 		{
 			// Create parameters
-			_stepInspector = new IMGUIContainer(OnDetailsInspector);
-			_stepInspector.style.flexShrink = new StyleFloat(1f);
-
-			IStyle exStyle = extensionContainer.style;
-			exStyle.backgroundColor = new StyleColor(new Color(0.18f, 0.18f, 0.18f, 0.80f));
-			exStyle.paddingTop = exStyle.paddingBottom = exStyle.paddingLeft = exStyle.paddingRight =
-				new StyleLength(new Length(5, LengthUnit.Pixel));
-
-			extensionContainer.Add(_stepInspector);
+			_stepInspector = mainContainer.Q<IMGUIContainer>();
+			_stepInspector.onGUIHandler = OnNodeDetails;
 		}
 
-		private void OnDetailsInspector()
+		private void OnNodeDetails()
 		{
 			SerializedObject obj = new(Step);
-			_stepInspector.SetEnabled(false);
+			float nodeWidth = extensionContainer.contentRect.width;
+
 			obj.UpdateIfRequiredOrScript();
 
 			using (new EditorGUI.DisabledScope(true))
 			{
 				SerializedProperty iterator = obj.GetIterator();
 				iterator.NextVisible(true);
+
 				while (iterator.NextVisible(false))
 				{
-					_stepInspector.SetEnabled(true);
-					EditorGUILayout.PropertyField(iterator, true);
+					EditorGUIUtility.labelWidth = nodeWidth * 0.4f;
+					EditorGUILayout.PropertyField(iterator, true, GUILayout.MaxWidth(nodeWidth));
 				}
 			}
 		}
@@ -154,7 +121,7 @@ namespace Recipes.Editor.Views
 		public override void SetPosition(Rect newPos)
 		{
 			base.SetPosition(newPos);
-			Step.position = newPos.min;
+			Step._nodePosition = newPos.min;
 		}
 
 		public override void OnSelected()
@@ -167,6 +134,32 @@ namespace Recipes.Editor.Views
 		{
 			base.OnUnselected();
 			OnStepViewSelected?.Invoke(null);
+		}
+
+		public static void CreateEdge(Edge edge)
+		{
+			if (edge.input.node is StepNodeView endNode &&
+			    edge.output.node is StepNodeView startNode)
+			{
+				int outputIndex = startNode.OutputPorts.IndexOf(edge.output);
+				int inputIndex = endNode.InputPorts.IndexOf(edge.input);
+
+				startNode.Step.Outputs[outputIndex] = endNode.Step;
+				endNode.Step.Inputs[inputIndex] = startNode.Step;
+			}
+		}
+
+		public static void DeleteEdge(Edge edge)
+		{
+			if (edge.input.node is StepNodeView endNode &&
+			    edge.output.node is StepNodeView startNode)
+			{
+				int outputIndex = startNode.OutputPorts.IndexOf(edge.output);
+				int inputIndex = endNode.InputPorts.IndexOf(edge.input);
+
+				startNode.Step.Outputs[outputIndex] = null;
+				endNode.Step.Inputs[inputIndex] = null;
+			}
 		}
 	}
 }

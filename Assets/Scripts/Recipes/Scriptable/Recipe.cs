@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Recipes.Scriptable;
 using Recipes.Scriptable.Steps;
 using Unity.EditorCoroutines.Editor;
 using UnityEngine;
@@ -28,7 +29,7 @@ public class Recipe : ScriptableObject
 			CreateStep(typeof(ResultStep));
 	}
 
-	public Step CreateStep(Type type)
+	public Step CreateStep(Type type, Vector2 nodePosition = default)
 	{
 		if (type == typeof(ResultStep) && steps.FindAll(s => s is ResultStep).Count == 1)
 		{
@@ -41,7 +42,9 @@ public class Recipe : ScriptableObject
 			return step;
 
 		step.name = type.Name;
-		step.guid = GUID.Generate().ToString();
+		step._nodeGUID = GUID.Generate().ToString();
+		step._nodePosition = nodePosition;
+
 		steps.Add(step);
 
 		AssetDatabase.AddObjectToAsset(step, this);

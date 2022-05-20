@@ -1,10 +1,14 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Recipes.Scriptable;
 using Recipes.Scriptable.Steps;
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Recipes.Editor.Views
@@ -46,24 +50,36 @@ namespace Recipes.Editor.Views
 			{
 				StepNodeView nodeView = GetNodeView(node);
 
-				foreach (Step nextStep in node.outputs)
+				foreach (Step prevStep in node.Inputs)
 				{
-					if (nextStep == null)
+					if (prevStep == null)
 						continue;
 
-					int outputIndex = Array.IndexOf(node.outputs, nextStep);
-					int inputIndex = Array.IndexOf(nextStep.inputs, node);
+					StepNodeView prevNode = GetNodeView(prevStep);
+
+					int outputIndex = Array.IndexOf(prevStep.Outputs, node);
+					int inputIndex = Array.IndexOf(node.Inputs, prevStep);
+
+					if (outputIndex < 0 || inputIndex < 0)
+					{
+						Debug.LogError("One of the Indices was not found");
+						continue;
+					}
 
 					// Connect ports at the same indexes as Steps
-					Edge edge = nodeView.Outputs[outputIndex].ConnectTo(GetNodeView(nextStep).Inputs[inputIndex]);
-					AddElement(edge);
+					Port output = prevNode.OutputPorts[outputIndex];
+					Port input = nodeView.InputPorts[inputIndex];
+					AddElement(output.ConnectTo(input));
 				}
 			});
+
+			// Frame All
+			EditorApplication.delayCall += () => FrameAll();
 		}
 
 		private StepNodeView GetNodeView(Step step)
 		{
-			return GetNodeByGuid(step.guid) as StepNodeView;
+			return GetNodeByGuid(step._nodeGUID) as StepNodeView;
 		}
 
 		public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -76,36 +92,17 @@ namespace Recipes.Editor.Views
 			graphViewChange.elementsToRemove?.ForEach(elem => {
 				// Delete Step (will nullify references)
 				if (elem is StepNodeView stepView)
-				{
 					_recipe.DeleteStep(stepView.Step);
-				}
 
 				// Delete Edge
 				if (elem is Edge edge)
-				{
-					if (edge.input.node is StepNodeView endNode &&
-					    edge.output.node is StepNodeView startNode)
-					{
-						int outputIndex = startNode.Outputs.IndexOf(edge.output);
-						startNode.Step.outputs[outputIndex] = null;
-
-						int inputIndex = endNode.Inputs.IndexOf(edge.input);
-						endNode.Step.inputs[inputIndex] = null;
-					}
-				}
+					StepNodeView.DeleteEdge(edge);
 			});
 
-			graphViewChange.edgesToCreate?.ForEach(edge => {
-				// Create Edge connections
-				if (edge.input.node is StepNodeView endNode &&
-				    edge.output.node is StepNodeView startNode)
-				{
-					int outputIndex = startNode.Outputs.IndexOf(edge.output);
-					startNode.Step.outputs[outputIndex] = endNode.Step;
-
-					int inputIndex = endNode.Inputs.IndexOf(edge.input);
-					endNode.Step.inputs[inputIndex] = startNode.Step;
-				}
+			graphViewChange.edgesToCreate?.ForEach(elem =>
+			{
+				// Create Edge
+				StepNodeView.CreateEdge(elem);
 			});
 
 			return graphViewChange;
@@ -113,7 +110,7 @@ namespace Recipes.Editor.Views
 
 		public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
 		{
-			//base.BuildContextualMenu(evt);
+			// base.BuildContextualMenu(evt);
 
 			TypeCache.TypeCollection types = TypeCache.GetTypesDerivedFrom<Step>();
 			foreach (Type type in types)
@@ -126,13 +123,18 @@ namespace Recipes.Editor.Views
 				if (recipeStepInfo == null)
 					continue;
 
-				evt.menu.AppendAction($"Step/{recipeStepInfo.StepName}", _ => CreateStep(type));
+				// Get Graph-relative mouse position
+				Vector2 mousePos = evt.localMousePosition;
+				mousePos -= (Vector2)contentViewContainer.transform.position;
+				mousePos *= 1 / contentViewContainer.transform.scale.x;
+
+				evt.menu.AppendAction($"Step/{recipeStepInfo.StepName}", _ => CreateStep(type, mousePos));
 			}
 		}
 
-		private void CreateStep(Type type)
+		private void CreateStep(Type type, Vector2 nodePosition)
 		{
-			Step step = _recipe.CreateStep(type);
+			Step step = _recipe.CreateStep(type, nodePosition);
 			CreateStepNode(step);
 		}
 

@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8715248421717088331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f576a2e6a13941f3abb5d24ec850affc, type: 3}
+  m_Name: IngredientStep
+  m_EditorClassIdentifier: 
+  _nodeGUID: 137d6e49fa037b14d8635ae774fbde80
+  _nodePosition: {x: -741.9226, y: -0.000013828278}
+  Outputs:
+  - {fileID: 6297382882633437271}
+  Inputs: []
+  ingredient: {fileID: 11400000, guid: 7ca728e696193b944b2957baca3780c4, type: 2}
+  quantity: 50
+--- !u!114 &-7099653852583749060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7635639ad2bd9254ab73db7f6283131d, type: 3}
+  m_Name: RestStep
+  m_EditorClassIdentifier: 
+  _nodeGUID: 30f929c6b09699940b4877cb09df7dae
+  _nodePosition: {x: -742, y: 112.5}
+  Outputs:
+  - {fileID: 6297382882633437271}
+  Inputs:
+  - {fileID: 1702514652476705756}
+  duration: 5000
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e34e3195a2a55e74ab93fb784c03505b, type: 3}
+  m_Name: CookiesRecipe
+  m_EditorClassIdentifier: 
+  steps:
+  - {fileID: 2849828532750856374}
+  - {fileID: -8715248421717088331}
+  - {fileID: 6297382882633437271}
+  - {fileID: -7099653852583749060}
+  - {fileID: 1702514652476705756}
+--- !u!114 &1702514652476705756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f576a2e6a13941f3abb5d24ec850affc, type: 3}
+  m_Name: IngredientStep
+  m_EditorClassIdentifier: 
+  _nodeGUID: 0828fa848a78bb048933a098f240142f
+  _nodePosition: {x: -981, y: 112.5}
+  Outputs:
+  - {fileID: -7099653852583749060}
+  Inputs: []
+  ingredient: {fileID: 11400000, guid: d221e01bea621064e98a6fc00cdf9aab, type: 2}
+  quantity: 50
+--- !u!114 &2849828532750856374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50b8a32cba9945dcb8f173599b5415ff, type: 3}
+  m_Name: ResultStep
+  m_EditorClassIdentifier: 
+  _nodeGUID: d26c6acd963fa1946a01242ecb313e70
+  _nodePosition: {x: -273, y: 0}
+  Outputs: []
+  Inputs:
+  - {fileID: 6297382882633437271}
+--- !u!114 &6297382882633437271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d004a7e36d9f81a498e48340294b5814, type: 3}
+  m_Name: MixStep
+  m_EditorClassIdentifier: 
+  _nodeGUID: d4ed21128d4b82b46942f4061f774c67
+  _nodePosition: {x: -495.93756, y: -0.000013828278}
+  Outputs:
+  - {fileID: 2849828532750856374}
+  Inputs:
+  - {fileID: -8715248421717088331}
+  - {fileID: -7099653852583749060}
+  - {fileID: 0}
+  position: {x: 0, y: 0, z: 0}

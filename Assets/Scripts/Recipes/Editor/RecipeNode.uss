@@ -1,0 +1,94 @@
+.node {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#node-border {
+    background-color: rgb(56, 56, 56);
+    border-left-color: rgb(32, 32, 32);
+    border-right-color: rgb(32, 32, 32);
+    border-top-color: rgb(32, 32, 32);
+    border-bottom-color: rgb(32, 32, 32);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+#selection-border {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    border-left-color: rgb(23, 130, 197);
+    border-right-color: rgb(23, 130, 197);
+    border-top-color: rgb(23, 130, 197);
+    border-bottom-color: rgb(23, 130, 197);
+    border-radius: 5px;
+}
+
+:hover > #selection-border {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+
+:selected > #selection-border {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+
+:hover:selected > #selection-border {
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+}
+
+#title {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    -unity-font-style: normal;
+    -unity-text-align: middle-center;
+    font-size: 15px;
+    background-color: rgb(56, 56, 56);
+}
+
+#top {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    background-color: rgba(65, 65, 65, 255);
+}
+
+#input {
+    flex-grow: 1;
+}
+
+#output {
+    flex-grow: 1;
+}
+
+.port > #connector > #cap {
+    background-color: rgb(255, 0, 0);
+}
+
+#collapsible-area > #extension {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: rgba(56, 56, 56, 255);
+}
