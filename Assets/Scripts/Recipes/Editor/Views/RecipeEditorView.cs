@@ -112,22 +112,26 @@ namespace Recipes.Editor.Views
 		{
 			// base.BuildContextualMenu(evt);
 
+			// Get Graph-relative mouse position
+			Vector2 mousePos = evt.localMousePosition;
+			mousePos -= (Vector2)contentViewContainer.transform.position;
+			mousePos *= 1 / contentViewContainer.transform.scale.x;
+
+			// Find All Steps
 			TypeCache.TypeCollection types = TypeCache.GetTypesDerivedFrom<Step>();
 			foreach (Type type in types)
 			{
+				// Ignore if abstract or ResultStep
 				if (type.IsAbstract || type == typeof(ResultStep))
 					continue;
 
 				StepAttribute recipeStepInfo = Attribute.GetCustomAttribute(type.GetTypeInfo(), typeof(StepAttribute)) as StepAttribute;
 
+				// Ignore if no StepAttribute
 				if (recipeStepInfo == null)
 					continue;
 
-				// Get Graph-relative mouse position
-				Vector2 mousePos = evt.localMousePosition;
-				mousePos -= (Vector2)contentViewContainer.transform.position;
-				mousePos *= 1 / contentViewContainer.transform.scale.x;
-
+				// Build Context Menu button
 				evt.menu.AppendAction($"Step/{recipeStepInfo.StepName}", _ => CreateStep(type, mousePos));
 			}
 		}

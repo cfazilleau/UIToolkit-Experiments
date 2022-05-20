@@ -31,12 +31,6 @@ public class Recipe : ScriptableObject
 
 	public Step CreateStep(Type type, Vector2 nodePosition = default)
 	{
-		if (type == typeof(ResultStep) && steps.FindAll(s => s is ResultStep).Count == 1)
-		{
-			Debug.LogError("You can't manually create another result Step");
-			return null;
-		}
-
 		Step step = CreateInstance(type) as Step;
 		if (step == null)
 			return step;
@@ -55,6 +49,9 @@ public class Recipe : ScriptableObject
 
 	public void DeleteStep(Step step)
 	{
+		if (step is ResultStep)
+			throw new Exception("Can't delete a ResultStep");
+
 		steps.Remove(step);
 
 		AssetDatabase.RemoveObjectFromAsset(step);

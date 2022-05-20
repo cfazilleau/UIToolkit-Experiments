@@ -1,15 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Recipes.Scriptable;
-using Recipes.Scriptable.Steps;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Recipes.Editor
+namespace Recipes.Editor.Views
 {
 	public sealed class StepNodeView : Node
 	{
@@ -26,7 +24,7 @@ namespace Recipes.Editor
 		{
 			_step = step;
 
-			title = step.StepTitle ?? step.StepInfo.StepName ?? step.name;
+			title = step.StepTitle;
 			viewDataKey = step._nodeGUID;
 
 			style.left = step._nodePosition.x;
@@ -45,7 +43,7 @@ namespace Recipes.Editor
 			// If input is a List, handle List ports
 			if (_step.InputSingleAndList)
 			{
-				ParameterInfo parameterInfo = _step.inputInfos[0];
+				ParameterInfo parameterInfo = _step.InputInfos[0];
 				Type genericType = parameterInfo.ParameterType.GetElementType()?.GenericTypeArguments[0];
 
 				// Only first port has a name
@@ -58,12 +56,12 @@ namespace Recipes.Editor
 			else
 			{
 				// Create Input ports
-				foreach (ParameterInfo info in _step.inputInfos)
+				foreach (ParameterInfo info in _step.InputInfos)
 					CreateAndAddPort(info);
 			}
 
 			// Create Output ports
-			foreach (ParameterInfo info in _step.outputInfos)
+			foreach (ParameterInfo info in _step.OutputInfos)
 				CreateAndAddPort(info);
 		}
 

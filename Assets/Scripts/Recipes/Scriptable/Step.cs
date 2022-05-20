@@ -16,18 +16,17 @@ namespace Recipes.Scriptable
 #endif
 		[SerializeField, HideInInspector] public Step[] Outputs = Array.Empty<Step>();
 		[SerializeField, HideInInspector] public Step[] Inputs = Array.Empty<Step>();
+		
+		private StepAttribute _stepInfo;
+		private MethodInfo _stepMethodInfo;
+		public readonly List<ParameterInfo> InputInfos = new();
+		public readonly List<ParameterInfo> OutputInfos = new();
 
-		public List<ParameterInfo> inputInfos = new();
-		public List<ParameterInfo> outputInfos = new();
-
-		public StepAttribute StepInfo;
-		public MethodInfo StepMethodInfo;
-
-		public virtual string StepTitle => null;
+		public virtual string StepTitle => _stepInfo?.StepName ?? name;
 
 		// Is there only one input parameter and is it a List
-		public bool InputSingleAndList => inputInfos.Count == 1 &&
-		                                  inputInfos[0] is { } info &&
+		public bool InputSingleAndList => InputInfos.Count == 1 &&
+		                                  InputInfos[0] is { } info &&
 		                                  info.ParameterType.GetElementType() is { IsGenericType: true } type &&
 		                                  type.GetGenericTypeDefinition() == typeof(List<>) &&
 		                                  type.GenericTypeArguments.Length == 1;
@@ -36,39 +35,39 @@ namespace Recipes.Scriptable
 		{
 			RefreshStepInfo();
 
-			if (StepMethodInfo != null)
+			if (_stepMethodInfo != null)
 			{
 				if (!InputSingleAndList)
 				{
 
-					Array.Resize(ref Inputs, inputInfos.Count);
+					Array.Resize(ref Inputs, InputInfos.Count);
 				}
 
-				Array.Resize(ref Outputs, outputInfos.Count);
+				Array.Resize(ref Outputs, OutputInfos.Count);
 			}
 		}
 
 		private void RefreshStepInfo()
 		{
 			// Get StepInfo
-			StepInfo = Attribute.GetCustomAttribute(GetType().GetTypeInfo(), typeof(StepAttribute)) as StepAttribute;
-			if (StepInfo == null)
+			_stepInfo = Attribute.GetCustomAttribute(GetType().GetTypeInfo(), typeof(StepAttribute)) as StepAttribute;
+			if (_stepInfo == null)
 				throw new Exception($"StepAttribute not found on step {name}");
 
 			// Get MethodInfo
-			StepMethodInfo = GetType().GetMethod(StepInfo.StepName);
-			if (StepMethodInfo == null)
-				throw new Exception($"Step Method {StepInfo.StepName} not found in step {name}");
+			_stepMethodInfo = GetType().GetMethod(_stepInfo.StepName);
+			if (_stepMethodInfo == null)
+				throw new Exception($"Step Method {_stepInfo.StepName} not found in step {name}");
 
 			// Get Parameter types
-			inputInfos.Clear();
-			outputInfos.Clear();
-			foreach (ParameterInfo parameter in StepMethodInfo.GetParameters())
+			InputInfos.Clear();
+			OutputInfos.Clear();
+			foreach (ParameterInfo parameter in _stepMethodInfo.GetParameters())
 			{
 				if (parameter.IsOut)
-					outputInfos.Add(parameter);
+					OutputInfos.Add(parameter);
 				else
-					inputInfos.Add(parameter);
+					InputInfos.Add(parameter);
 			}
 		}
 
