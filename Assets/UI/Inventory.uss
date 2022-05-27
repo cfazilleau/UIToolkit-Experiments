@@ -1,0 +1,98 @@
+.inventory {
+    position: absolute;
+    height: 418px;
+    width: 650px;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    background-color: rgb(67, 67, 67);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.inventory-title {
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    font-size: 24px;
+    -unity-text-align: middle-center;
+}
+
+.inventory-container {
+    justify-content: space-around;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.inventory-slot-container {
+    width: 64px;
+    height: 64px;
+    margin: 5px;
+    border-left-color: rgba(48, 48, 48, 0);
+    border-right-color: rgba(48, 48, 48, 0);
+    border-top-color: rgba(48, 48, 48, 0);
+    border-bottom-color: rgba(48, 48, 48, 0);
+    background-color: rgb(9, 19, 21);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+}
+
+.inventory-slot-container:hover {
+    border-left-color: rgba(19, 169, 217, 255);
+    border-right-color: rgba(19, 169, 217, 255);
+    border-top-color: rgba(19, 169, 217, 255);
+    border-bottom-color: rgba(19, 169, 217, 255);
+}
+
+.inventory-slot-icon {
+    padding: 15px;
+    flex-shrink: 0;
+    -unity-background-scale-mode: scale-to-fit;
+    flex-grow: 1;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.inventory-ghost-item {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    visibility: hidden;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.inventory-slot-count-label {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    -unity-text-align: lower-right;
+    -unity-font-style: bold;
+    color: rgba(255, 255, 255, 255);
+    white-space: nowrap;
+}

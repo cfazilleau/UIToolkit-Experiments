@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Inventory.uss?fileID=7433441132597879392&amp;guid=84d55218fc5a195408b47d8d6e4eff37&amp;type=3#Inventory" />
+    <ui:VisualElement class="inventory">
+        <ui:Label text="INVENTORY" display-tooltip-when-elided="true" name="InventoryTitle" class="inventory-title" />
+        <ui:VisualElement name="InventoryContainer" class="inventory-container" />
+    </ui:VisualElement>
+    <ui:VisualElement name="GhostItem" picking-mode="Ignore" class="inventory-ghost-item" style="top: -21px; left: -19px; visibility: visible; display: flex; overflow: visible;">
+        <ui:Label display-tooltip-when-elided="true" name="GhostItemLabel" class="inventory-slot-count-label" />
+    </ui:VisualElement>
+</ui:UXML>
