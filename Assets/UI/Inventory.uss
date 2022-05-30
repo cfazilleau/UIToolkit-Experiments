@@ -62,10 +62,10 @@
 }
 
 .inventory-slot-container:hover {
-    border-left-color: rgba(19, 169, 217, 255);
-    border-right-color: rgba(19, 169, 217, 255);
-    border-top-color: rgba(19, 169, 217, 255);
-    border-bottom-color: rgba(19, 169, 217, 255);
+    border-left-color: rgb(19, 169, 217);
+    border-right-color: rgb(19, 169, 217);
+    border-top-color: rgb(19, 169, 217);
+    border-bottom-color: rgb(19, 169, 217);
 }
 
 .inventory-slot-icon {
@@ -79,20 +79,23 @@
     margin-bottom: 2px;
 }
 
-.inventory-ghost-item {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    visibility: hidden;
-    -unity-background-scale-mode: scale-to-fit;
-}
-
 .inventory-slot-count-label {
     position: absolute;
     bottom: 0;
     right: 0;
     -unity-text-align: lower-right;
     -unity-font-style: bold;
-    color: rgba(255, 255, 255, 255);
+    color: rgb(255, 255, 255);
     white-space: nowrap;
+}
+
+.inventory-ghost-item {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background-color: rgba(0, 0, 0, 0);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
 }

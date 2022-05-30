@@ -1,21 +1,23 @@
 using System;
+using Inventory;
 using UnityEngine;
 
-namespace UI
+public class PlayerController : MonoBehaviour
 {
-	public class PlayerController : MonoBehaviour
+	[SerializeField]
+	private int inventorySize = 40;
+	private Inventory.Inventory _inventory;
+
+	public Inventory.Inventory Inventory => _inventory;
+
+	[SerializeField]
+	private ItemStack[] startItems = Array.Empty<ItemStack>();
+
+	private void Awake()
 	{
-		private Inventory inventory = new Inventory(40);
+		_inventory = new Inventory.Inventory(inventorySize);
 
-		public Inventory Inventory => inventory;
-
-		[SerializeField]
-		private ItemStack[] startItems = Array.Empty<ItemStack>();
-
-		private void Start()
-		{
-			foreach (ItemStack startItem in startItems)
-				inventory.Add(startItem);
-		}
+		foreach (ItemStack startItem in startItems)
+			_inventory.Add(startItem);
 	}
 }

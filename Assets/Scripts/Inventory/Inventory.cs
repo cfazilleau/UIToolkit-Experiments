@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 
-namespace UI
+namespace Inventory
 {
 	public class Inventory
 	{
-		private ItemStack[] _inventory;
+		private readonly ItemStack[] _inventory;
 
 		public ItemStack this[int index] => _inventory[index];
 		public int Size => _inventory.Length;
@@ -65,50 +65,12 @@ namespace UI
 			return stackToAdd.quantity;
 		}
 
-		public ItemStack TakeStack(int index)
-		{
-			ItemStack stack = _inventory[index];
-
-			// If the stack exist, remove it from the inventory
-			if (stack != null)
-			{
-				_inventory[index] = null;
-				OnInventoryItemChanged?.Invoke(index);
-			}
-
-			return stack;
-		}
-
-		public bool PlaceStack(ItemStack stack, int index)
-		{
-			if (stack == null)
-				return false;
-
-			ItemStack target = _inventory[index];
-
-			// Place stack if empty spot
-			if (target == null)
-			{
-				_inventory[index] = new ItemStack(stack);
-				stack.quantity = 0;
-				OnInventoryItemChanged?.Invoke(index);
-				return true;
-			}
-
-			// If spot of different item type, ignore
-			if (target.item != stack.item)
-			{
-				return false;
-			}
-
-			// Fill stack with remaining items
-			int add = Math.Clamp(stack.quantity, 0, target.FreeSpace);
-			target.quantity += add;
-			stack.quantity -= add;
-			OnInventoryItemChanged?.Invoke(index);
-			return true;
-		}
-
+		/// <summary>
+		/// Remove stack or part of stack from the inventory and returns it
+		/// </summary>
+		/// <param name="index">Index of the item stack in the inventory</param>
+		/// <param name="quantity">Quantity of the stack to take (can't be bigger than stack size) or -1 to take the whole stack</param>
+		/// <returns>The stack at this index, or null if not existing</returns>
 		public ItemStack Take(int index, int quantity)
 		{
 			ItemStack target = _inventory[index];
@@ -116,6 +78,9 @@ namespace UI
 			// If the stack exist, remove it from the inventory
 			if (target != null && target.quantity >= quantity)
 			{
+				if (quantity == -1)
+					quantity = target.quantity;
+
 				target.quantity -= quantity;
 
 				if (target.quantity == 0)
@@ -129,22 +94,28 @@ namespace UI
 			return null;
 		}
 
+		/// <summary>
+		/// Remove stack or part of stack from the inventory and returns it
+		/// </summary>
+		/// <param name="stack">Item Stack to place in the inventory</param>
+		/// <param name="quantity">Quantity of the stack to place (can't be bigger than stack size) or -1 to place the whole stack</param>
+		/// <param name="index">Index of the item stack in the inventory</param>
+		/// <returns>True if the whole quantity requested has been placed, false otherwise</returns>
 		public bool Place(ItemStack stack, int quantity, int index)
 		{
 			if (stack == null || quantity > stack.quantity)
 				return false;
+
+			if (quantity == -1)
+				quantity = stack.quantity;
 
 			ItemStack target = _inventory[index];
 
 			// Place new stack if empty spot
 			if (target == null)
 			{
-				stack.quantity -= quantity;
-
-				ItemStack newStack = new ItemStack(stack);
-				newStack.quantity = quantity;
-				_inventory[index] = newStack;
-
+				_inventory[index] = new ItemStack(stack);
+				stack.quantity = 0;
 				OnInventoryItemChanged?.Invoke(index);
 				return true;
 			}

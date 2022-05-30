@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Inventory;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
-namespace UI
+namespace UI.Inventory
 {
 	public class InventoryUI : MonoBehaviour
 	{
@@ -16,12 +17,11 @@ namespace UI
 		private VisualElement _slotContainer;
 
 		// Ghost Item that follows the mouse
-		private VisualElement _ghostItem;
-		private Label _ghostItemLabel;
+		private InventorySlot _ghostItem;
 		#endregion
 
 		private readonly List<InventorySlot> _inventorySlots = new();
-		private ItemStack _movingStack = null;
+		private ItemStack _movingStack;
 
 		private void Awake()
 		{
@@ -31,9 +31,11 @@ namespace UI
 			//Search the root for the SlotContainer Visual Element
 			_slotContainer = _root.Q<VisualElement>("InventoryContainer");
 
-			_ghostItem = _root.Query<VisualElement>("GhostItem");
-			_ghostItemLabel = _root.Query<Label>("GhostItemLabel");
+			_ghostItem = _root.Query<InventorySlot>("GhostItem");
+		}
 
+		private void Start()
+		{
 			InitInventory();
 		}
 
@@ -49,74 +51,77 @@ namespace UI
 		}
 
 		#region Callbacks
-		private void OnPointerDown(PointerDownEvent evt, InventorySlot slot)
+		private void OnPointerDown(PointerDownEvent evt, int index)
 		{
 			// Left Mouse Button
 			if (evt.button == 0)
 			{
 				if (_movingStack == null)
-					TakeStack(slot);
+					TakeStack(index);
 				else
-					PlaceStack(slot);
+					PlaceStack(index);
 			}
 			// Right Mouse button
 			else if (evt.button == 1)
 			{
 				if (_movingStack == null)
-					TakeHalfStack(slot);
+					TakeHalfStack(index);
 				else
-					PlaceOne(slot);
+					Place(index, 1);
 			}
 			else
 			{
 				return;
 			}
 
+			if (_movingStack != null && _movingStack.IsEmpty)
+				_movingStack = null;
+
 			RefreshGhostCursor();
 		}
 
 		private void OnInventoryItemChanged(int index)
 		{
+			_inventorySlots[index].Stack = player.Inventory[index];
 			_inventorySlots[index].Refresh();
 		}
 		#endregion
 
 		#region Inventory Controls
-		private void TakeStack(InventorySlot slot)
+		private void TakeStack(int index)
 		{
-			_movingStack = slot.TakeStack();
+			_movingStack = player.Inventory.Take(index, -1);
 		}
 
-		private void PlaceStack(InventorySlot slot)
+		private void PlaceStack(int index)
 		{
 			// If different item slot, swap items
-			if (slot.Item != _movingStack.item)
+			if (_inventorySlots[index].Item != _movingStack.item)
 			{
-				ItemStack tmp = slot.TakeStack();
-				slot.PlaceStack(_movingStack);
+				ItemStack tmp = player.Inventory.Take(index, -1);
+				player.Inventory.Place(_movingStack, -1, index);
 				_movingStack = tmp;
 			}
 			// If same item, fill slot
-			else if (slot.PlaceStack(_movingStack))
+			else
 			{
-				if (_movingStack.quantity == 0)
-					_movingStack = null;
+				player.Inventory.Place(_movingStack, -1, index);
 			}
 		}
 
-		private void TakeHalfStack(InventorySlot slot)
+		private void TakeHalfStack(int index)
 		{
-			_movingStack = slot.TakeHalf();
+			if (player.Inventory[index] == null)
+				return;
+
+			int quantity = player.Inventory[index].quantity;
+			_movingStack = player.Inventory.Take(index, quantity - quantity / 2); // if odd, take biggest part
 		}
 
-		private void PlaceOne(InventorySlot slot)
+		private void Place(int index, int quantity)
 		{
 			// Add to existing stack or create a new one
-			if (slot.Place(_movingStack, 1))
-			{
-				if (_movingStack.quantity == 0)
-					_movingStack = null;
-			}
+			player.Inventory.Place(_movingStack, quantity, index);
 		}
 		#endregion
 
@@ -128,9 +133,10 @@ namespace UI
 			//Create InventorySlots and add them as children to the SlotContainer
 			for (int i = 0; i < player.Inventory.Size; i++)
 			{
-				InventorySlot slot = new InventorySlot(player.Inventory, i);
+				InventorySlot slot = new InventorySlot(player.Inventory[i]);
 
-				slot.RegisterCallback<PointerDownEvent>(evt => OnPointerDown(evt, slot));
+				int index = i;
+				slot.RegisterCallback<PointerDownEvent>(evt => OnPointerDown(evt, index));
 
 				_inventorySlots.Add(slot);
 				_slotContainer.Add(slot);
@@ -141,10 +147,8 @@ namespace UI
 
 		private void RefreshGhostCursor()
 		{
-			_ghostItem.style.backgroundImage = _movingStack?.item.Icon;
-			_ghostItemLabel.text = _movingStack == null || _movingStack.quantity < 2
-				? string.Empty
-				: _movingStack.quantity.ToString();
+			_ghostItem.Stack = _movingStack;
+			_ghostItem.visible = _movingStack != null;
 		}
 	}
 }

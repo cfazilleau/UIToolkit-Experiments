@@ -1,6 +1,6 @@
 using System;
 
-namespace UI
+namespace Inventory
 {
 	[Serializable]
 	public class ItemStack
@@ -10,6 +10,7 @@ namespace UI
 
 		public int FreeSpace => item.MaxStackSize - quantity;
 		public bool IsFull => FreeSpace == 0;
+		public bool IsEmpty => quantity == 0 || item == null;
 
 		public ItemStack(Item item, int quantity = 0)
 		{
