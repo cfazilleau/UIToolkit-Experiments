@@ -1,6 +1,6 @@
 using System;
 
-namespace Inventory
+namespace Storage
 {
 	[Serializable]
 	public class ItemStack

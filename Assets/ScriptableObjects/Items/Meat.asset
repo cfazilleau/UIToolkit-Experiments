@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: Meat
   m_EditorClassIdentifier: 
   icon: {fileID: 2800000, guid: 4a39cb4b272639541b7bd5ac0649acf7, type: 3}
+  itemName: Meat
+  maxStackSize: 100

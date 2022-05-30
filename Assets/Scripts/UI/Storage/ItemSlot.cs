@@ -1,14 +1,13 @@
+using Storage;
 using UnityEngine.UIElements;
-using Inventory;
 
-namespace UI.Inventory
+namespace UI.Storage
 {
-	public class InventorySlot : VisualElement
+	public class ItemSlot : VisualElement
 	{
-
 		#region UXML
 		// This nested class needs to be defined in order to create instances of this element from the UI Builder
-		public new class UxmlFactory : UxmlFactory<InventorySlot, UxmlTraits> { }
+		public new class UxmlFactory : UxmlFactory<ItemSlot, UxmlTraits> { }
 
 		// This nested class needs to be defined in order to edit properties from the UI Builder
 		public new class UxmlTraits : VisualElement.UxmlTraits { }
@@ -36,9 +35,9 @@ namespace UI.Inventory
 
 		#endregion
 
-		public InventorySlot() : this(null) {}
+		public ItemSlot() : this(null) {}
 
-		public InventorySlot(ItemStack stack)
+		public ItemSlot(ItemStack stack)
 		{
 			// Create and add Icon and label
 			_icon = new Image();

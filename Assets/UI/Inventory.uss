@@ -1,10 +1,12 @@
+.inventory-screen {
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
 .inventory {
-    position: absolute;
-    height: 418px;
-    width: 650px;
-    top: 50%;
-    left: 50%;
-    translate: -50% -50%;
     background-color: rgb(67, 67, 67);
     border-left-color: rgb(255, 255, 255);
     border-right-color: rgb(255, 255, 255);
@@ -18,6 +20,10 @@
     border-bottom-left-radius: 10px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .inventory-title {
@@ -28,14 +34,17 @@
 }
 
 .inventory-container {
-    justify-content: space-around;
-    flex-grow: 1;
     flex-wrap: wrap;
     flex-direction: row;
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    border-left-width: 5px;
+    border-right-width: 5px;
+    border-top-width: 5px;
+    border-bottom-width: 5px;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    justify-content: center;
 }
 
 .inventory-slot-container {
