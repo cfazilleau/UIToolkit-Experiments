@@ -4,7 +4,7 @@ using UnityEngine;
 public class StorageChest : MonoBehaviour
 {
 	[SerializeField]
-	private Vector2Int _chestSize = new(2, 5);
+	private Vector2Int chestSize = new(2, 5);
 
 	private ItemStorage _chestStorage;
 
@@ -12,13 +12,6 @@ public class StorageChest : MonoBehaviour
 
 	private void Awake()
 	{
-		_chestStorage = new ItemStorage(_chestSize);
-		_chestStorage.OnStorageItemChanged += OnStorageItemChanged;
-	}
-
-	private void OnStorageItemChanged(int index)
-	{
-		ItemStack stack = _chestStorage[index];
-		Debug.Log($"item {stack?.item} at index {index} changed.");
+		_chestStorage = new ItemStorage(chestSize);
 	}
 }

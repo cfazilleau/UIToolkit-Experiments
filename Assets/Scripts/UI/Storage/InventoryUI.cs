@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Storage;
 using UnityEngine;
@@ -26,12 +25,12 @@ namespace UI.Storage
 		// Player Inventory
 		private VisualElement _inventoryRoot;
 		private VisualElement _inventorySlotsUI;
-		private List<ItemSlot> _inventorySlots = new();
+		private readonly List<ItemSlot> _inventorySlots = new();
 
 		// Open Container
 		private VisualElement _otherRoot;
 		private VisualElement _otherSlotsUI;
-		private List<ItemSlot> _otherSlots = new();
+		private readonly List<ItemSlot> _otherSlots = new();
 		private ItemStorage _otherStorage;
 
 		// Moving Item
@@ -53,41 +52,29 @@ namespace UI.Storage
 
 			_ghostItem = _root.Query<ItemSlot>("GhostItem");
 
-			Hide(true);
+			Hide();
 		}
 
 		private void Start()
 		{
 			InitInventory();
 
-			player.OnOtherStorageOpen += OnPlayerOtherStorageOpen;
+			player.OnStorageOpen += Show;
+			player.OnStorageClose += Hide;
 		}
 
-		public void Show()
+		private void Show(ItemStorage otherStorage)
 		{
-			GetComponent<UIDocument>().enabled = true;
-			_inventoryRoot.RemoveFromClassList("inventory--hidden");
-			_otherRoot.RemoveFromClassList("inventory--hidden");
+			SetOtherStorage(otherStorage);
+
+			_inventoryRoot.SetEnabled(true);
+			_otherRoot.SetEnabled(_otherStorage != null);
 		}
 
-		public void Hide(bool instant = false)
+		private void Hide()
 		{
-			if (instant)
-			{
-				_inventoryRoot.AddToClassList("inventory-hidden");
-				_otherRoot.AddToClassList("inventory-hidden");
-				GetComponent<UIDocument>().enabled = false;
-			}
-			else
-				StartCoroutine(HideCoroutine());
-		}
-
-		private IEnumerator HideCoroutine()
-		{
-			_inventoryRoot.AddToClassList("inventory-hidden");
-			_otherRoot.AddToClassList("inventory-hidden");
-			yield return new WaitForSeconds(0.2f);
-			GetComponent<UIDocument>().enabled = false;
+			_inventoryRoot.SetEnabled(false);
+			_otherRoot.SetEnabled(false);
 		}
 
 		private void Update()
@@ -129,7 +116,6 @@ namespace UI.Storage
 
 		private void RefreshOtherContainerUI()
 		{
-			_otherRoot.style.display = _otherStorage == null ? DisplayStyle.None : DisplayStyle.Flex;
 			_otherSlotsUI.Clear();
 			_otherSlots.Clear();
 
@@ -150,8 +136,6 @@ namespace UI.Storage
 
 			// set maxWidth to colCount * slotSize (including spacing/borders)
 			_otherSlotsUI.style.maxWidth = slotBorder + slotSize * _otherStorage.Size.x;
-
-			_otherRoot.AddToClassList("visibleOpacity");
 		}
 
 		private void RefreshGhostCursor()
@@ -188,7 +172,7 @@ namespace UI.Storage
 			RefreshGhostCursor();
 		}
 
-		private void OnPlayerOtherStorageOpen(ItemStorage container)
+		private void SetOtherStorage(ItemStorage container)
 		{
 			if (_otherStorage != null)
 				_otherStorage.OnStorageItemChanged -= OnOtherStorageItemChanged;
@@ -197,11 +181,6 @@ namespace UI.Storage
 
 			if (_otherStorage != null)
 				_otherStorage.OnStorageItemChanged += OnOtherStorageItemChanged;
-
-			if (container == null)
-				Hide();
-			else
-				Show();
 
 			RefreshOtherContainerUI();
 		}

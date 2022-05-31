@@ -10,7 +10,7 @@
                 <UI.Storage.ItemSlot />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="Container" class="inventory">
+        <ui:VisualElement name="Container" class="inventory inventory--hidden">
             <ui:Label text="CONTAINER" name="Title" class="inventory-title" />
             <ui:VisualElement name="SlotsContainer" class="inventory-container">
                 <UI.Storage.ItemSlot />

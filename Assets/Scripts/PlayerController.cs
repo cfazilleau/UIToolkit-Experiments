@@ -10,12 +10,25 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	private ItemStack[] startItems = Array.Empty<ItemStack>();
 
+	[SerializeField]
+	private StorageChest chest;
+
 	private ItemStorage _inventory;
+
+	/// <summary>
+	/// Player Inventory
+	/// </summary>
 	public ItemStorage Inventory => _inventory;
 
-	public StorageChest chest;
+	/// <summary>
+	/// On Open inventory (parameter is other container or null)
+	/// </summary>
+	public event Action<ItemStorage> OnStorageOpen;
 
-	public Action<ItemStorage> OnOtherStorageOpen;
+	/// <summary>
+	/// On Close Inventory
+	/// </summary>
+	public event Action OnStorageClose;
 
 	private void Awake()
 	{
@@ -24,10 +37,9 @@ public class PlayerController : MonoBehaviour
 
 	private void Start()
 	{
+		// Fill inventory with startItems
 		foreach (ItemStack startItem in startItems)
-		{
 			_inventory.Add(startItem);
-		}
 	}
 
 	private void OnGUI()
@@ -36,11 +48,15 @@ public class PlayerController : MonoBehaviour
 		{
 			if (GUILayout.Button("Open Chest"))
 			{
-				OnOtherStorageOpen?.Invoke(chest.ChestStorage);
+				OnStorageOpen?.Invoke(chest.ChestStorage);
 			}
-			if (GUILayout.Button("Close Chest"))
+			if (GUILayout.Button("Open Inventory"))
 			{
-				OnOtherStorageOpen?.Invoke(null);
+				OnStorageOpen?.Invoke(null);
+			}
+			if (GUILayout.Button("Close"))
+			{
+				OnStorageClose?.Invoke();
 			}
 		}
 	}

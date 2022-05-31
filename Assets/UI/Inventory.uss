@@ -24,15 +24,21 @@
     margin-right: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
-    transition-duration: 0.2s;
-    transition-property: initial;
+    transition-duration: 0.2s, 0.3s;
+    transition-property: opacity, translate;
     opacity: 1;
-    transition-timing-function: ease-out-circ;
+    transition-timing-function: ease-out-circ, ease-in-out;
+    transition-delay: 0s, 0s;
 }
 
-.inventory--hidden {
+.inventory:disabled {
     opacity: 0;
     translate: 0 60px;
+    transition-duration: 0.2s, 0.3s, 0s;
+    transition-property: opacity, translate, display;
+    transition-timing-function: ease-in-out-circ, ease-in-out, ease;
+    display: none;
+    transition-delay: 0s, 0s, 0.3s;
 }
 
 .inventory-title {

@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 428fbcd085754946b0d4a4a0c59d6324, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _chestSize: {x: 2, y: 5}
+  _chestSize: {x: 3, y: 4}
 --- !u!4 &278593656
 Transform:
   m_ObjectHideFlags: 0
