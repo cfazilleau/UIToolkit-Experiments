@@ -24,6 +24,15 @@
     margin-right: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
+    transition-duration: 0.2s;
+    transition-property: initial;
+    opacity: 1;
+    transition-timing-function: ease-out-circ;
+}
+
+.inventory--hidden {
+    opacity: 0;
+    translate: 0 60px;
 }
 
 .inventory-title {
@@ -45,6 +54,9 @@
     border-top-color: rgba(0, 0, 0, 0);
     border-bottom-color: rgba(0, 0, 0, 0);
     justify-content: center;
+    transition-duration: 3s, 3s;
+    transition-property: max-width, max-height;
+    transition-timing-function: ease-in, ease-out;
 }
 
 .inventory-slot-container {

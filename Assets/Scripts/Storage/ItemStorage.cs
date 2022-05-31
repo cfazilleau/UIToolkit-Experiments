@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using UnityEngine;
 
 namespace Storage
 {
@@ -7,14 +8,19 @@ namespace Storage
 	{
 		private readonly ItemStack[] _stacks;
 
+		private Vector2Int _size;
+
 		public ItemStack this[int index] => _stacks[index];
-		public int Size => _stacks.Length;
+		public ItemStack this[int x, int y] => this[y * _size.x + x];
+		public int Length => _stacks.Length;
+		public Vector2Int Size => _size;
 
-		public event Action<int> OnInventoryItemChanged;
+		public event Action<int> OnStorageItemChanged;
 
-		public ItemStorage(int size)
+		public ItemStorage(Vector2Int size)
 		{
-			_stacks = new ItemStack[size];
+			_size = size;
+			_stacks = new ItemStack[size.x * size.y];
 		}
 
 		/// <summary>
@@ -54,7 +60,7 @@ namespace Storage
 				// Fill stack with remaining items
 				int add = Math.Clamp(stackToAdd.quantity, 0, stack.FreeSpace);
 				stack.quantity += add;
-				OnInventoryItemChanged?.Invoke(Array.IndexOf(_stacks, stack));
+				OnStorageItemChanged?.Invoke(Array.IndexOf(_stacks, stack));
 				stackToAdd.quantity -= add;
 
 				// If we still have items to place, repeat operation
@@ -85,7 +91,7 @@ namespace Storage
 				if (target.quantity == 0)
 					_stacks[index] = null;
 
-				OnInventoryItemChanged?.Invoke(index);
+				OnStorageItemChanged?.Invoke(index);
 
 				return new ItemStack(target.item, quantity);
 			}
@@ -118,7 +124,7 @@ namespace Storage
 			{
 				_stacks[index] = new ItemStack(stack) { quantity = quantity };
 				stack.quantity -= quantity;
-				OnInventoryItemChanged?.Invoke(index);
+				OnStorageItemChanged?.Invoke(index);
 				return true;
 			}
 
@@ -128,7 +134,7 @@ namespace Storage
 				int add = Math.Clamp(quantity, 0, targetStack.FreeSpace);
 				targetStack.quantity += add;
 				stack.quantity -= add;
-				OnInventoryItemChanged?.Invoke(index);
+				OnStorageItemChanged?.Invoke(index);
 				return true;
 			}
 

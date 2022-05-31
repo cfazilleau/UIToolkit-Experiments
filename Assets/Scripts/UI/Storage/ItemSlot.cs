@@ -1,5 +1,7 @@
 using Storage;
+using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.UIElements.Experimental;
 
 namespace UI.Storage
 {
@@ -72,5 +74,6 @@ namespace UI.Storage
 					: Stack.quantity.ToString();
 			}
 		}
+
 	}
 }

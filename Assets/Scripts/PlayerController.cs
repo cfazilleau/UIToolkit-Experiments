@@ -8,22 +8,18 @@ public class PlayerController : MonoBehaviour
 	private Vector2Int inventorySize = new Vector2Int(4, 3);
 
 	[SerializeField]
-	private Vector2Int containerSize = new Vector2Int(3, 3);
-
-	[SerializeField]
 	private ItemStack[] startItems = Array.Empty<ItemStack>();
 
 	private ItemStorage _inventory;
 	public ItemStorage Inventory => _inventory;
 
-	private ItemStorage _otherStorage;
-	public ItemStorage OtherStorage => _otherStorage;
+	public StorageChest chest;
 
 	public Action<ItemStorage> OnOtherStorageOpen;
 
 	private void Awake()
 	{
-		_inventory = new ItemStorage(inventorySize.x * inventorySize.y);
+		_inventory = new ItemStorage(inventorySize);
 	}
 
 	private void Start()
@@ -32,8 +28,20 @@ public class PlayerController : MonoBehaviour
 		{
 			_inventory.Add(startItem);
 		}
+	}
 
-		_otherStorage = new ItemStorage(containerSize.x * containerSize.y);
-		OnOtherStorageOpen?.Invoke(_otherStorage);
+	private void OnGUI()
+	{
+		using (new GUILayout.VerticalScope())
+		{
+			if (GUILayout.Button("Open Chest"))
+			{
+				OnOtherStorageOpen?.Invoke(chest.ChestStorage);
+			}
+			if (GUILayout.Button("Close Chest"))
+			{
+				OnOtherStorageOpen?.Invoke(null);
+			}
+		}
 	}
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Storage;
 using UnityEngine;
@@ -14,15 +15,16 @@ namespace UI.Storage
 		private PlayerController player;
 
 		[SerializeField]
-		private Vector2 slotSize = Vector2.one * 72;
+		private float slotSize = 72f;
 
 		[SerializeField]
-		private Vector2 slotsContainerBorder = Vector2.one * 10;
+		private float slotBorder = 10f;
 
 		// UI document
 		private VisualElement _root;
 
 		// Player Inventory
+		private VisualElement _inventoryRoot;
 		private VisualElement _inventorySlotsUI;
 		private List<ItemSlot> _inventorySlots = new();
 
@@ -42,8 +44,8 @@ namespace UI.Storage
 			_root = GetComponent<UIDocument>().rootVisualElement;
 
 			//Search the root for the SlotContainer Visual Element
-			VisualElement inventoryRoot = _root.Query<VisualElement>("Inventory");
-			_inventorySlotsUI = inventoryRoot.Query<VisualElement>("SlotsContainer");
+			_inventoryRoot = _root.Query<VisualElement>("Inventory");
+			_inventorySlotsUI = _inventoryRoot.Query<VisualElement>("SlotsContainer");
 
 			//Search the root for the SlotContainer Visual Element
 			_otherRoot = _root.Query<VisualElement>("Container");
@@ -51,15 +53,41 @@ namespace UI.Storage
 
 			_ghostItem = _root.Query<ItemSlot>("GhostItem");
 
-			player.OnOtherStorageOpen += OnPlayerOtherStorageOpen;
-			OnPlayerOtherStorageOpen(player.OtherStorage);
-
-			RefreshOtherContainerUI();
+			Hide(true);
 		}
 
 		private void Start()
 		{
 			InitInventory();
+
+			player.OnOtherStorageOpen += OnPlayerOtherStorageOpen;
+		}
+
+		public void Show()
+		{
+			GetComponent<UIDocument>().enabled = true;
+			_inventoryRoot.RemoveFromClassList("inventory--hidden");
+			_otherRoot.RemoveFromClassList("inventory--hidden");
+		}
+
+		public void Hide(bool instant = false)
+		{
+			if (instant)
+			{
+				_inventoryRoot.AddToClassList("inventory-hidden");
+				_otherRoot.AddToClassList("inventory-hidden");
+				GetComponent<UIDocument>().enabled = false;
+			}
+			else
+				StartCoroutine(HideCoroutine());
+		}
+
+		private IEnumerator HideCoroutine()
+		{
+			_inventoryRoot.AddToClassList("inventory-hidden");
+			_otherRoot.AddToClassList("inventory-hidden");
+			yield return new WaitForSeconds(0.2f);
+			GetComponent<UIDocument>().enabled = false;
 		}
 
 		private void Update()
@@ -82,7 +110,7 @@ namespace UI.Storage
 			_inventorySlots.Clear();
 
 			//Create InventorySlots and add them as children to the SlotContainer
-			for (int i = 0; i < player.Inventory.Size; i++)
+			for (int i = 0; i < player.Inventory.Length; i++)
 			{
 				ItemSlot slot = new ItemSlot(player.Inventory[i]);
 
@@ -93,12 +121,10 @@ namespace UI.Storage
 				_inventorySlotsUI.Add(slot);
 			}
 
-			Vector2 size = slotSize * Mathf.Ceil(Mathf.Sqrt(player.Inventory.Size));
-			size += slotsContainerBorder;
-			_inventorySlotsUI.style.maxWidth = size.x;
-			_inventorySlotsUI.style.maxHeight = size.y;
+			// set maxWidth to colCount * slotSize (including spacing/borders)
+			_inventorySlotsUI.style.maxWidth = slotBorder + slotSize * player.Inventory.Size.x;
 
-			player.Inventory.OnInventoryItemChanged += OnInventoryItemChanged;
+			player.Inventory.OnStorageItemChanged += OnStorageItemChanged;
 		}
 
 		private void RefreshOtherContainerUI()
@@ -111,7 +137,7 @@ namespace UI.Storage
 				return;
 
 			//Create Slots and add them as children to the SlotContainer
-			for (int i = 0; i < _otherStorage.Size; i++)
+			for (int i = 0; i < _otherStorage.Length; i++)
 			{
 				ItemSlot slot = new ItemSlot(_otherStorage[i]);
 
@@ -122,10 +148,10 @@ namespace UI.Storage
 				_otherSlotsUI.Add(slot);
 			}
 
-			Vector2 size = slotSize * Mathf.Ceil(Mathf.Sqrt(_otherStorage.Size));
-			size += slotsContainerBorder;
-			_otherSlotsUI.style.maxWidth = size.x;
-			_otherSlotsUI.style.maxHeight = size.y;
+			// set maxWidth to colCount * slotSize (including spacing/borders)
+			_otherSlotsUI.style.maxWidth = slotBorder + slotSize * _otherStorage.Size.x;
+
+			_otherRoot.AddToClassList("visibleOpacity");
 		}
 
 		private void RefreshGhostCursor()
@@ -165,12 +191,17 @@ namespace UI.Storage
 		private void OnPlayerOtherStorageOpen(ItemStorage container)
 		{
 			if (_otherStorage != null)
-				_otherStorage.OnInventoryItemChanged -= OnOtherStorageItemChanged;
+				_otherStorage.OnStorageItemChanged -= OnOtherStorageItemChanged;
 
 			_otherStorage = container;
 
 			if (_otherStorage != null)
-				_otherStorage.OnInventoryItemChanged += OnOtherStorageItemChanged;
+				_otherStorage.OnStorageItemChanged += OnOtherStorageItemChanged;
+
+			if (container == null)
+				Hide();
+			else
+				Show();
 
 			RefreshOtherContainerUI();
 		}
@@ -181,7 +212,7 @@ namespace UI.Storage
 			_otherSlots[index].Refresh();
 		}
 
-		private void OnInventoryItemChanged(int index)
+		private void OnStorageItemChanged(int index)
 		{
 			_inventorySlots[index].Stack = player.Inventory[index];
 			_inventorySlots[index].Refresh();
