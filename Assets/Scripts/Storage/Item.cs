@@ -17,7 +17,7 @@ namespace Storage
 		#endregion
 
 		#region Properties
-		public Texture2D Icon => icon;
+		public Texture2D Icon => icon != null ? icon : Texture2D.redTexture;
 		public string ItemName => itemName;
 		public int MaxStackSize => maxStackSize;
 		#endregion

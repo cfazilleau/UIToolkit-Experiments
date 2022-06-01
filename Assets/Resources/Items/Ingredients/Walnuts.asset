@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1028fddd5f8045f590b67b7da4b36a7e, type: 3}
-  m_Name: Meat
+  m_Script: {fileID: 11500000, guid: e6f89daefba9439e9a65c95f708ec49d, type: 3}
+  m_Name: Walnuts
   m_EditorClassIdentifier: 
-  icon: {fileID: 2800000, guid: 4a39cb4b272639541b7bd5ac0649acf7, type: 3}
-  itemName: Meat
-  maxStackSize: 100
+  ingredientName: 
+  image: {fileID: 0}
