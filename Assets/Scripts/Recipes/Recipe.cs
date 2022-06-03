@@ -48,7 +48,6 @@ namespace Recipes
 			steps.Add(step);
 
 			AssetDatabase.AddObjectToAsset(step, this);
-			AssetDatabase.SaveAssets();
 
 			return step;
 		}
@@ -61,13 +60,12 @@ namespace Recipes
 			steps.Remove(step);
 
 			AssetDatabase.RemoveObjectFromAsset(step);
-			AssetDatabase.SaveAssets();
 		}
 
 		public void SaveAsset()
 		{
 			EditorUtility.SetDirty(this);
-			AssetDatabase.SaveAssetIfDirty(this);
+			AssetDatabase.SaveAssets();
 		}
 #endif
 

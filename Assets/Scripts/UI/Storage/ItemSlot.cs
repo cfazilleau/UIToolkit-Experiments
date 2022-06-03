@@ -67,9 +67,17 @@ namespace UI.Storage
 			else
 			{
 				_icon.image = Stack.item.Icon;
-				_countLabel.text = Stack.quantity < 2
-					? string.Empty
-					: Stack.quantity.ToString();
+
+				if (_stack.item.Icon == null)
+				{
+					_countLabel.text = $"{_stack.item.ItemName} ({Stack.quantity})";
+				}
+				else
+				{
+					_countLabel.text = Stack.quantity < 2
+						? string.Empty
+						: Stack.quantity.ToString();
+				}
 			}
 		}
 

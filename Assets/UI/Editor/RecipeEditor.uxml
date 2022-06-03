@@ -1,17 +1,21 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/Scripts/Recipes/Editor/RecipeEditor.uss?fileID=7433441132597879392&amp;guid=60df3ab540b435b44b1dbfcdd8a9b7c9&amp;type=3#RecipeEditor" />
+    <Style src="project://database/Assets/UI/Editor/RecipeEditor.uss?fileID=7433441132597879392&amp;guid=60df3ab540b435b44b1dbfcdd8a9b7c9&amp;type=3#RecipeEditor" />
     <uie:Toolbar>
         <uie:ToolbarMenu display-tooltip-when-elided="true" name="AssetsMenu" text="Assets " />
+        <uie:ToolbarSpacer style="flex-grow: 1;" />
+        <uie:ToolbarButton text="Save" display-tooltip-when-elided="true" name="SaveButton" />
     </uie:Toolbar>
     <Editor.Recipes.Views.SplitView fixed-pane-initial-dimension="200" fixed-pane-index="1">
         <ui:VisualElement name="left-panel">
-            <ui:Label text="Graph" display-tooltip-when-elided="true" style="background-color: rgb(40, 40, 40);" />
-            <Editor.Recipes.Views.RecipeEditorView focusable="true" style="flex-grow: 1;" />
+            <ui:Label text="Graph" display-tooltip-when-elided="true" class="panel-title-bar" />
+            <Editor.Recipes.Views.RecipeEditorView focusable="true" style="flex-grow: 1;">
+                <ui:Label text="Select a Recipe to get started." display-tooltip-when-elided="true" name="SelectRecipeLabel" picking-mode="Ignore" class="panel-select-recipe-message" />
+            </Editor.Recipes.Views.RecipeEditorView>
         </ui:VisualElement>
         <ui:VisualElement name="right-panel">
             <ui:VisualElement name="Inspector" style="flex-grow: 1; flex-shrink: 0;">
-                <ui:Label text="Details" display-tooltip-when-elided="true" style="background-color: rgb(40, 40, 40);" />
-                <Editor.Recipes.Views.InspectorView style="flex-grow: 1; margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; width: 100%; height: 100%;" />
+                <ui:Label text="Details" display-tooltip-when-elided="true" class="panel-title-bar" />
+                <Editor.Recipes.Views.InspectorView class="panel-inspector-view" />
             </ui:VisualElement>
         </ui:VisualElement>
     </Editor.Recipes.Views.SplitView>

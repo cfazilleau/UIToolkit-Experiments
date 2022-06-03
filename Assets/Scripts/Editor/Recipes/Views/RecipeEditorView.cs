@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Recipes;
 using Recipes.Steps;
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -18,6 +20,8 @@ namespace Editor.Recipes.Views
 		public new class UxmlFactory : UxmlFactory<RecipeEditorView, UxmlTraits> { };
 
 		private Recipe _recipe;
+
+		public Recipe targetRecipe => _recipe;
 
 		public RecipeEditorView()
 		{
@@ -39,6 +43,9 @@ namespace Editor.Recipes.Views
 			graphViewChanged -= OnGraphViewChanged;
 			DeleteElements(graphElements);
 			graphViewChanged += OnGraphViewChanged;
+
+			if (recipe == null)
+				return;
 
 			// Create Nodes
 			recipe.steps.ForEach(CreateStepNode);
@@ -71,8 +78,14 @@ namespace Editor.Recipes.Views
 				}
 			});
 
-			// Frame All
-			EditorApplication.delayCall += () => FrameAll();
+			// Frame All after one frame
+			EditorCoroutineUtility.StartCoroutine(FrameRecipe(), this);
+		}
+
+		private IEnumerator FrameRecipe()
+		{
+			yield return null;
+			FrameAll();
 		}
 
 		private StepNodeView GetNodeView(Step step)
@@ -108,6 +121,9 @@ namespace Editor.Recipes.Views
 
 		public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
 		{
+			if (_recipe == null)
+				return;
+
 			// base.BuildContextualMenu(evt);
 
 			// Get Graph-relative mouse position
@@ -130,7 +146,7 @@ namespace Editor.Recipes.Views
 					continue;
 
 				// Build Context Menu button
-				evt.menu.AppendAction($"Step/{recipeStepInfo.StepName}", _ => CreateStep(type, mousePos));
+				evt.menu.AppendAction($"Add Step/{recipeStepInfo.StepName}", _ => CreateStep(type, mousePos));
 			}
 		}
 

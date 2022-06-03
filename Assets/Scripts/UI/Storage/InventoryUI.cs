@@ -35,7 +35,11 @@ namespace UI.Storage
 
 		// Moving Item
 		private ItemSlot _ghostItem;
-		private ItemStack _movingStack;
+		private ItemStack _ghostStack;
+
+		public bool Shown => _inventoryRoot is { enabledSelf: true };
+		public event Action OnShow;
+		public event Action OnHide;
 
 		private void Awake()
 		{
@@ -52,34 +56,21 @@ namespace UI.Storage
 
 			_ghostItem = _root.Query<ItemSlot>("GhostItem");
 
-			Hide();
+			Hide(false);
 		}
 
 		private void Start()
 		{
 			InitInventory();
 
-			player.OnStorageOpen += Show;
-			player.OnStorageClose += Hide;
-		}
-
-		private void Show(ItemStorage otherStorage)
-		{
-			SetOtherStorage(otherStorage);
-
-			_inventoryRoot.SetEnabled(true);
-			_otherRoot.SetEnabled(_otherStorage != null);
-		}
-
-		private void Hide()
-		{
-			_inventoryRoot.SetEnabled(false);
-			_otherRoot.SetEnabled(false);
+			player.OnStorageOpen += s => Show(s);
+			player.OnStorageClose += () => Hide();
 		}
 
 		private void Update()
 		{
-			if (_movingStack != null)
+			// Update ghostItem with mousePosition
+			if (_ghostStack != null)
 			{
 				Vector2 pos = Mouse.current.position.ReadValue();
 
@@ -140,34 +131,72 @@ namespace UI.Storage
 
 		private void RefreshGhostCursor()
 		{
-			_ghostItem.Stack = _movingStack;
-			_ghostItem.visible = _movingStack != null;
+			_ghostItem.Stack = _ghostStack;
+			_ghostItem.visible = _ghostStack != null;
+		}
+
+		private void Show(ItemStorage otherStorage, bool notify = true)
+		{
+			SetOtherStorage(otherStorage);
+
+			_inventoryRoot.SetEnabled(true);
+			_otherRoot.SetEnabled(_otherStorage != null);
+
+			if (notify)
+				OnShow?.Invoke();
+		}
+
+		private void Hide(bool notify = true)
+		{
+			_inventoryRoot.SetEnabled(false);
+			_otherRoot.SetEnabled(false);
+
+			if (notify)
+				OnHide?.Invoke();
 		}
 
 		#region Callbacks
+
 		private void OnPointerDown(PointerDownEvent evt, ItemStorage itemStorage, int index)
 		{
-			if (_movingStack == null)
+			OnSlotClicked(evt.button, itemStorage, index);
+		}
+
+		public void OnSlotClicked(int mouseButton, ItemStorage itemStorage, int index)
+		{
+			if (_ghostStack == null && itemStorage[index] != null)
 			{
 				// Left Mouse Button
-				if (evt.button == 0)
-					TakeStack(itemStorage, index);
+				if (mouseButton == 0)
+				{
+					// Take whole stack
+					_ghostStack = itemStorage.Take(index, -1);
+				}
 				// Right Mouse button
-				else if (evt.button == 1)
-					TakeHalfStack(itemStorage, index);
+				else if (mouseButton == 1)
+				{
+					// Take Half stack
+					_ghostStack = itemStorage.Take(index, Mathf.CeilToInt(itemStorage[index].quantity / 2f));
+				}
 			}
 			else
 			{
 				// Left Mouse Button
-				if (evt.button == 0)
-					PlaceStack(itemStorage, index);
+				if (mouseButton == 0)
+				{
+					// Place full stack
+					itemStorage.Place(_ghostStack, -1, index);
+				}
 				// Right Mouse button
-				else if (evt.button == 1)
-					Place(itemStorage, 1, index);
+				else if (mouseButton == 1)
+				{
+					// Place one item
+					itemStorage.Place(_ghostStack, 1, index);
+				}
 			}
 
-			if (_movingStack is { IsEmpty: true })
-				_movingStack = null;
+			if (_ghostStack is { IsEmpty: true })
+				_ghostStack = null;
 
 			RefreshGhostCursor();
 		}
@@ -196,44 +225,7 @@ namespace UI.Storage
 			_inventorySlots[index].Stack = player.Inventory[index];
 			_inventorySlots[index].Refresh();
 		}
-		#endregion
 
-		#region Inventory Controls
-		private void TakeStack(ItemStorage itemStorage, int index)
-		{
-			_movingStack = itemStorage.Take(index, -1);
-		}
-
-		private void PlaceStack(ItemStorage itemStorage, int index)
-		{
-			// If different item slot, swap items
-			if (itemStorage[index] != null && itemStorage[index].item != _movingStack.item)
-			{
-				ItemStack tmp = itemStorage.Take(index, -1);
-				itemStorage.Place(_movingStack, -1, index);
-				_movingStack = tmp;
-			}
-			// If same item, merge stacks
-			else
-			{
-				itemStorage.Place(_movingStack, -1, index);
-			}
-		}
-
-		private void TakeHalfStack(ItemStorage itemStorage, int index)
-		{
-			if (itemStorage[index] == null)
-				return;
-
-			int quantity = itemStorage[index].quantity;
-			_movingStack = itemStorage.Take(index, quantity - quantity / 2); // if odd, take biggest part
-		}
-
-		private void Place(ItemStorage itemStorage, int quantity, int index)
-		{
-			// Add to existing stack or create a new one
-			itemStorage.Place(_movingStack, quantity, index);
-		}
 		#endregion
 	}
 }

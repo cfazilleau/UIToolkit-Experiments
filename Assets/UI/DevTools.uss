@@ -1,0 +1,39 @@
+:root {
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+}
+
+.creative-inventory-tab {
+    width: 182px;
+    max-height: 500px;
+    background-color: rgb(67, 67, 67);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    left: 10px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+}
+
+.creative-inventory-tab:disabled {
+    opacity: 0;
+    translate: -100% 0;
+    transition-duration: 0.2s, 0.3s, 0s;
+    transition-property: opacity, translate, display;
+    transition-timing-function: ease-in-out-circ, ease-in-out, ease;
+    display: none;
+    transition-delay: 0s, 0s, 0.3s;
+}
+
+.creative-inventory-container {
+    flex-direction: row;
+    justify-content: center;
+}
