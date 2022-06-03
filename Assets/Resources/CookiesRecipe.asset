@@ -13,30 +13,12 @@ MonoBehaviour:
   m_Name: IngredientStep
   m_EditorClassIdentifier: 
   _nodeGUID: 137d6e49fa037b14d8635ae774fbde80
-  _nodePosition: {x: -741.9226, y: -0.000013828278}
+  _nodePosition: {x: -742, y: 0}
   outputs:
   - {fileID: 6297382882633437271}
   inputs: []
   ingredient: {fileID: 11400000, guid: 7ca728e696193b944b2957baca3780c4, type: 2}
   quantity: 50
---- !u!114 &-8037976983381305671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d58e1182c43f074db638adcdad4e883, type: 3}
-  m_Name: ShapeStep
-  m_EditorClassIdentifier: 
-  _nodeGUID: 03828894d37dcfe4fb7f6f76c6db41b5
-  _nodePosition: {x: -310, y: 237}
-  outputs:
-  - {fileID: 0}
-  inputs:
-  - {fileID: 0}
 --- !u!114 &-7099653852583749060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,7 +56,6 @@ MonoBehaviour:
   - {fileID: 6297382882633437271}
   - {fileID: -7099653852583749060}
   - {fileID: 1702514652476705756}
-  - {fileID: -8037976983381305671}
   resultStep: {fileID: 2849828532750856374}
   stepList:
   - {fileID: -7099653852583749060}
@@ -111,7 +92,7 @@ MonoBehaviour:
   m_Name: ResultStep
   m_EditorClassIdentifier: 
   _nodeGUID: d26c6acd963fa1946a01242ecb313e70
-  _nodePosition: {x: -273, y: 0}
+  _nodePosition: {x: -255, y: 0}
   outputs: []
   inputs:
   - {fileID: 6297382882633437271}
@@ -128,7 +109,7 @@ MonoBehaviour:
   m_Name: MixStep
   m_EditorClassIdentifier: 
   _nodeGUID: d4ed21128d4b82b46942f4061f774c67
-  _nodePosition: {x: -495.93756, y: -0.000013828278}
+  _nodePosition: {x: -421, y: 0}
   outputs:
   - {fileID: 2849828532750856374}
   inputs:
