@@ -4,3 +4,24 @@ GridBackground {
     --thick-line-color: rgba(193, 196, 192, 0.1);
     --spacing: 15;
 }
+
+.panel-title-bar {
+    background-color: rgb(40, 40, 40);
+}
+
+.panel-select-recipe-message {
+    flex-grow: 1;
+    -unity-text-align: middle-center;
+    font-size: 15px;
+    -unity-font-style: bold;
+}
+
+.panel-inspector-view {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%;
+    height: 72px;
+    justify-content: space-around;
+}

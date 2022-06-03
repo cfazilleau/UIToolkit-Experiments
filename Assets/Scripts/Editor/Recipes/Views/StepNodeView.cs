@@ -120,6 +120,8 @@ namespace Editor.Recipes.Views
 		{
 			base.SetPosition(newPos);
 			Step._nodePosition = newPos.min;
+
+			EditorUtility.SetDirty(Step);
 		}
 
 		public override void OnSelected()
@@ -144,6 +146,9 @@ namespace Editor.Recipes.Views
 
 				startNode.Step.outputs[outputIndex] = endNode.Step;
 				endNode.Step.inputs[inputIndex] = startNode.Step;
+
+				EditorUtility.SetDirty(startNode._step);
+				EditorUtility.SetDirty(endNode._step);
 			}
 		}
 
@@ -157,6 +162,9 @@ namespace Editor.Recipes.Views
 
 				startNode.Step.outputs[outputIndex] = null;
 				endNode.Step.inputs[inputIndex] = null;
+
+				EditorUtility.SetDirty(startNode._step);
+				EditorUtility.SetDirty(endNode._step);
 			}
 		}
 	}

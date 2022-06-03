@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeGUID: 137d6e49fa037b14d8635ae774fbde80
   _nodePosition: {x: -741.9226, y: -0.000013828278}
-  Outputs:
+  outputs:
   - {fileID: 6297382882633437271}
-  Inputs: []
+  inputs: []
   ingredient: {fileID: 11400000, guid: 7ca728e696193b944b2957baca3780c4, type: 2}
   quantity: 50
 --- !u!114 &-8037976983381305671
@@ -33,9 +33,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeGUID: 03828894d37dcfe4fb7f6f76c6db41b5
   _nodePosition: {x: -310, y: 237}
-  Outputs:
+  outputs:
   - {fileID: 0}
-  Inputs:
+  inputs:
   - {fileID: 0}
 --- !u!114 &-7099653852583749060
 MonoBehaviour:
@@ -51,9 +51,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeGUID: 30f929c6b09699940b4877cb09df7dae
   _nodePosition: {x: -742, y: 112.5}
-  Outputs:
+  outputs:
   - {fileID: 6297382882633437271}
-  Inputs:
+  inputs:
   - {fileID: 1702514652476705756}
   duration: 5000
 --- !u!114 &11400000
@@ -93,9 +93,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeGUID: 0828fa848a78bb048933a098f240142f
   _nodePosition: {x: -981, y: 112.5}
-  Outputs:
+  outputs:
   - {fileID: -7099653852583749060}
-  Inputs: []
+  inputs: []
   ingredient: {fileID: 11400000, guid: d221e01bea621064e98a6fc00cdf9aab, type: 2}
   quantity: 50
 --- !u!114 &2849828532750856374
@@ -112,8 +112,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeGUID: d26c6acd963fa1946a01242ecb313e70
   _nodePosition: {x: -273, y: 0}
-  Outputs: []
-  Inputs:
+  outputs: []
+  inputs:
   - {fileID: 6297382882633437271}
 --- !u!114 &6297382882633437271
 MonoBehaviour:
@@ -129,9 +129,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeGUID: d4ed21128d4b82b46942f4061f774c67
   _nodePosition: {x: -495.93756, y: -0.000013828278}
-  Outputs:
+  outputs:
   - {fileID: 2849828532750856374}
-  Inputs:
+  inputs:
   - {fileID: -8715248421717088331}
   - {fileID: -7099653852583749060}
   - {fileID: 0}

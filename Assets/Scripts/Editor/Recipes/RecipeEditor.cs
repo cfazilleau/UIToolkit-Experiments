@@ -2,6 +2,7 @@ using Editor.Recipes.Views;
 using Recipes;
 using UnityEditor;
 using UnityEditor.Callbacks;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -16,6 +17,8 @@ namespace Editor.Recipes
 
 		private RecipeEditorView _recipeEditorView;
 		private InspectorView _inspectorView;
+		private Button _saveButton;
+		private Label _selectRecipeLabel;
 
 		[MenuItem("Window/RecipeEditor")]
 		public static void OpenWindow()
@@ -40,17 +43,31 @@ namespace Editor.Recipes
 
 			_recipeEditorView = root.Query<RecipeEditorView>();
 			_inspectorView = root.Query<InspectorView>();
+			_saveButton = root.Query<Button>("SaveButton");
+			_selectRecipeLabel = root.Query<Label>("SelectRecipeLabel");
+
 			_recipeEditorView.OnStepViewSelected = OnNodeSelectionChanged;
+			_saveButton.clicked += OnClickedSaveButton;
 
 			OnSelectionChange();
 		}
 
+		private void OnClickedSaveButton()
+		{
+			if (_recipeEditorView.targetRecipe != null)
+			{
+				_recipeEditorView.targetRecipe.SaveAsset();
+			}
+		}
+
 		private void OnSelectionChange()
 		{
-			if (Selection.activeObject is Recipe recipe)
+			_recipeEditorView.PopulateView(Selection.activeObject as Recipe);
+			_selectRecipeLabel.style.display = _recipeEditorView.targetRecipe == null ? DisplayStyle.Flex : DisplayStyle.None;
+
+			if (_recipeEditorView.targetRecipe != null)
 			{
-				_recipeEditorView.PopulateView(recipe);
-				recipe.RebuildTaskList();
+				_recipeEditorView.targetRecipe.RebuildTaskList();
 			}
 		}
 
