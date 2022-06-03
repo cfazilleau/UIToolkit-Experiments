@@ -1,22 +1,20 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Inventory.uss?fileID=7433441132597879392&amp;guid=84d55218fc5a195408b47d8d6e4eff37&amp;type=3#Inventory" />
-    <ui:VisualElement class="inventory-screen">
-        <ui:VisualElement name="Inventory" class="inventory">
-            <ui:Label text="INVENTORY" name="Title" class="inventory-title" />
-            <ui:VisualElement name="SlotsContainer" class="inventory-container">
-                <UI.Storage.ItemSlot />
-                <UI.Storage.ItemSlot />
-                <UI.Storage.ItemSlot />
-                <UI.Storage.ItemSlot />
-            </ui:VisualElement>
+    <ui:VisualElement name="Inventory" class="inventory">
+        <ui:Label text="INVENTORY" name="Title" class="inventory-title" />
+        <ui:VisualElement name="SlotsContainer" class="inventory-container">
+            <UI.Storage.ItemSlot />
+            <UI.Storage.ItemSlot />
+            <UI.Storage.ItemSlot />
+            <UI.Storage.ItemSlot />
         </ui:VisualElement>
-        <ui:VisualElement name="Container" class="inventory inventory--hidden">
-            <ui:Label text="CONTAINER" name="Title" class="inventory-title" />
-            <ui:VisualElement name="SlotsContainer" class="inventory-container">
-                <UI.Storage.ItemSlot />
-                <UI.Storage.ItemSlot />
-                <UI.Storage.ItemSlot />
-            </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="Container" class="inventory inventory--hidden">
+        <ui:Label text="CONTAINER" name="Title" class="inventory-title" />
+        <ui:VisualElement name="SlotsContainer" class="inventory-container">
+            <UI.Storage.ItemSlot />
+            <UI.Storage.ItemSlot />
+            <UI.Storage.ItemSlot />
         </ui:VisualElement>
     </ui:VisualElement>
     <UI.Storage.ItemSlot name="GhostItem" picking-mode="Ignore" class="inventory-ghost-item" />

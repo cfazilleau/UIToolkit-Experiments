@@ -1,7 +1,5 @@
-.inventory-screen {
+:root {
     flex-direction: row;
-    width: 100%;
-    height: 100%;
     align-items: center;
     justify-content: center;
 }
@@ -113,7 +111,7 @@
     -unity-text-align: lower-right;
     -unity-font-style: bold;
     color: rgb(255, 255, 255);
-    white-space: nowrap;
+    white-space: normal;
 }
 
 .inventory-ghost-item {

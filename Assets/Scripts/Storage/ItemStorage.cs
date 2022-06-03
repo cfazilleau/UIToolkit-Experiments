@@ -6,9 +6,9 @@ namespace Storage
 {
 	public class ItemStorage
 	{
-		private readonly ItemStack[] _stacks;
+		protected readonly ItemStack[] _stacks;
 
-		private Vector2Int _size;
+		protected Vector2Int _size;
 
 		public ItemStack this[int index] => _stacks[index];
 		public ItemStack this[int x, int y] => this[y * _size.x + x];
@@ -28,7 +28,7 @@ namespace Storage
 		/// </summary>
 		/// <param name="stackToAdd">ItemStack to add</param>
 		/// <returns>The amount of items that could not find an empty slot</returns>
-		public int Add(ItemStack stackToAdd)
+		public virtual int Add(ItemStack stackToAdd)
 		{
 			do
 			{
@@ -76,7 +76,7 @@ namespace Storage
 		/// <param name="index">Index of the item stack in the storage</param>
 		/// <param name="quantity">Quantity of the stack to take (can't be bigger than stack size) or -1 to take the whole stack</param>
 		/// <returns>The stack at this index, or null if not existing</returns>
-		public ItemStack Take(int index, int quantity)
+		public virtual ItemStack Take(int index, int quantity)
 		{
 			ItemStack target = _stacks[index];
 
@@ -106,7 +106,7 @@ namespace Storage
 		/// <param name="quantity">Quantity of the stack to place (can't be bigger than stack size) or -1 to place the whole stack</param>
 		/// <param name="index">Index of the item stack in the storage</param>
 		/// <returns>True if the whole quantity requested has been placed, false otherwise</returns>
-		public bool Place(ItemStack stack, int quantity, int index)
+		public virtual bool Place(ItemStack stack, int quantity, int index)
 		{
 			// Check values
 			if (stack == null || quantity > stack.quantity)

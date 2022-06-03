@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Inventory.uss?fileID=7433441132597879392&amp;guid=84d55218fc5a195408b47d8d6e4eff37&amp;type=3#Inventory" />
+    <Style src="project://database/Assets/UI/DevTools.uss?fileID=7433441132597879392&amp;guid=7541e70c64fefd64197db37f07c6939f&amp;type=3#DevTools" />
+    <ui:VisualElement name="CreativeInventoryTab" class="creative-inventory-tab" style="left: auto; margin-left: 10px;">
+        <ui:Label text="ALL ITEMS" display-tooltip-when-elided="true" class="inventory-title" />
+        <ui:ScrollView name="ScrollView" horizontal-scroller-visibility="Hidden" style="flex-grow: 1;">
+            <ui:VisualElement name="SlotsContainer" class="inventory-container creative-inventory-container">
+                <UI.Storage.ItemSlot />
+                <UI.Storage.ItemSlot />
+                <UI.Storage.ItemSlot />
+                <UI.Storage.ItemSlot />
+                <UI.Storage.ItemSlot />
+                <UI.Storage.ItemSlot />
+            </ui:VisualElement>
+        </ui:ScrollView>
+    </ui:VisualElement>
+</ui:UXML>
