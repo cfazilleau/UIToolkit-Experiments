@@ -11,8 +11,6 @@ namespace Recipes.Steps
 		[SerializeField]
 		private int duration;
 
-		public override string InstructionLine => $"Cook at {temperature} during {duration} minutes";
-
 		public bool Cook(in Preparation input, out Preparation result)
 		{
 			result = input;

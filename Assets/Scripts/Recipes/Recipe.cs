@@ -88,19 +88,6 @@ namespace Recipes
 			}
 
 			stepList.Reverse();
-
-			Debug.Log(PrintTaskList());
 		}
-
-		public string PrintTaskList()
-		{
-			string text = "";
-			foreach (Step step in stepList)
-			{
-				text += step.InstructionLine + "\n";
-			}
-			return text;
-		}
-
 	}
 }

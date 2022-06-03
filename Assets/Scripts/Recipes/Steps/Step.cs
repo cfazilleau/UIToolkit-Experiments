@@ -23,7 +23,6 @@ namespace Recipes.Steps
 		public readonly List<ParameterInfo> OutputInfos = new();
 
 		public virtual string StepTitle => _stepInfo?.StepName ?? name;
-		public virtual string InstructionLine => GetType().Name;
 
 		// Is there only one input parameter and is it a List
 		public bool InputSingleAndList => InputInfos.Count == 1 &&
